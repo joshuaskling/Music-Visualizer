@@ -1,31 +1,83 @@
 import bpy, math
+from math import sin
 from mathutils import Vector
+
+
+
+
+f = open('C:\\data.dat','r')
+arrayList = []
+for line in f.readlines():
+    arrayList.extend(line.split())
+f.close()
+
+value = []
+samples = 0
+for s in arrayList:
+    t = s
+    value.append(float(t))
+    samples = samples + 1
+
+for i in range (samples):
+    print(value[i])
+
+
+
+
+
+
+strPath = r"C:\andre.mp3"
+
+area = bpy.context.area
+old_type = area.type
+area.type = 'SEQUENCE_EDITOR'
+bpy.ops.sequencer.sound_strip_add(filepath=strPath)
+area.type = old_type
+
+
+
+
+
 
 name = 'TestPyramid'
 
 origin = Vector()
 origin.zero()
+meshLoc = Vector()
+meshLoc.zero()
 
-(x,y,z) = (0.707107, 0.258819, 0.965926)
-
+(varA,varB,varC) = (0.5, 1.0, 2.0)
 
 faces = ((1,0,4), (4,2,1), (4,3,2), (4,0,3), (0,1,2,3))
-i=0
+return 0
 for i in range(-4,4):
     
-    verts = ((x+2*i,x,-1), (x+2*i,-x,-1), (-x+2*i,-x,-1), (-x+2*i,x,-1), (0+2*i,0,1))
-    
+    verts = (((varA)+i,varA,0), ((varA)+i,-varA,0), ((-varA)+i,-varA,0), ((-varA)+i,varA,0), (0+i,0,1))
     me = bpy.data.meshes.new(name+'Mesh'+str(i+4))
     ob = bpy.data.objects.new(name + str(i+4), me)
 
+    meshLoc = (i,0,0)
     ob.location = origin
     ob.show_name = False
 
     scn = bpy.context.scene
     scn.objects.link(ob)
     scn.objects.active = ob
-    ob.select = False
- 
+    
     me.from_pydata(verts, [], faces)
     me.update()
-    i = i + 1
+    ob.location = meshLoc
+    
+    
+    
+    
+
+    for frameNumber in range (1,250):
+        ob.keyframe_insert(data_path="scale", index = 1, frame =frameNumber)
+        ob.scale = (1, 2*sin((frameNumber+(4*i))/10), 1)
+    
+    
+
+    
+    
+    ob.select = False
