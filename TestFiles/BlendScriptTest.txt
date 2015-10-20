@@ -10,23 +10,23 @@ except:
     pass
 
 
-f = open('C:\\data.dat','r')
-inputData = []
+f = open('C:\\BeatTimes.dat','r')
+beatData = []
 for line in f.readlines():
-    inputData.extend(line.split())
+    beatData.extend(line.split())
 f.close()
 
 beatTimes = []
 beatFrames = []
-samples = 0
-for i in inputData:
+beats = 0
+for i in beatData:
     tmp = i
     beatTimes.append(float(tmp))
-    samples = samples + 1
-    beatFrames.append(int(beatTimes[samples-1]*24))
-    print(beatFrames[samples-1])
+    beats = beats + 1
+    beatFrames.append(int(beatTimes[beats-1]*24))
+    print(beatFrames[beats-1])
 
-lastFrame = beatFrames[samples-1]
+lastFrame = beatFrames[beats-1]
 
 strPath = r"C:\andre.mp3"
 

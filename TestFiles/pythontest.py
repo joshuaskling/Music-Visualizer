@@ -32,14 +32,15 @@ print("Anim. Frames: ")
 frames = (frameRate * (samples * sampleHop)) / sampleRate
 print(frames)
 print("Samples/Frame: ")
-print(float(samples)/float(frames))
+frameConversionRate = float(samples)/float(frames)
+print(frameConversionRate)
 print("Seconds: ")
 print(frames/frameRate)
 
 # convert the bin based Mel spectrogram array to a time based array
 #	
 timeArray = []
-scaleFactor = 1.25
+scaleFactor = 100/80
 
 for q in range(samples):
     tmpArry = []
@@ -49,8 +50,10 @@ for q in range(samples):
     timeArray.append(tmpArry)
 np.savetxt("C:\\MelTimeArray.dat", timeArray)
 
+# downconvert the time array into an animation frame array
+#
 frameArray = []
-for q in range(samples/2):
+for q in range(samples/frameConversionRate):
     tmpArry = []
     for r in range(melBins):
 	tmpValue = (((timeArray[(2*q)])[r])+((timeArray[(2*q)+1])[r]))/2
@@ -58,6 +61,8 @@ for q in range(samples/2):
     frameArray.append(tmpArry)
 np.savetxt("C:\\MelFrameArray.dat", frameArray)
 
+# confirm script execution
+#
 print("Frame Array Construction Finished")
 print("")
 
