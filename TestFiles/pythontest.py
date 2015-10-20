@@ -3,45 +3,62 @@ import librosa
 import numpy as np
 import os
 
+# function declarations
+#
+def scale(input):
+    input = (input - minVol) * scaleFactor
+    input = input * scaleFactor
+    return input
+
+# declare constants
+#
 frameRate = 24
+sampleRate = 1000 * frameRate
 
-y, sr = librosa.load("C:\\andre.mp3", sr=(frameRate * 1000))
-S = librosa.feature.melspectrogram(y=y, sr=(frameRate * 1000), n_mels=8,fmax=8000)
-D = librosa.logamplitude(S,ref_power=np.max)
-np.savetxt("C:\\newdata.dat", D)
 
-value = []
-samples = 0
-for s in D:
-    t=s
-    value.append(t)
+# setup librosa functions/processing
+#
+y, sr = librosa.load("C:\\andre.mp3", sr=sampleRate)
+S = librosa.feature.melspectrogram(y=y, sr=sampleRate, n_mels=8,fmax=8000)
+librosaMel = librosa.logamplitude(S,ref_power=np.max)
+np.savetxt("C:\\newdata.dat", librosaMel)
+samples = len(librosaMel[1])
 
-for s in value[1]:
-    samples = samples + 1
-
+# print out some information about what we're working with
+#
 print("Array: ")
-print(value)
+print(librosaMel)
 print("Samples: ")
 print(samples)
-print("Frames: ")
-frames = (samples * 512) / 1000
+print("Anim. Frames: ")
+frames = (frameRate * (samples * 512)) / sampleRate
 print(frames)
 print("Seconds: ")
 print(frames/frameRate)
-    		
-arry = []
+
+# convert the bin based Mel spectrogram array to a time based array
+#	
 frameArry = []
+scaleFactor = 1.25
 
 for q in range(samples):
     tmpArry = []
     for r in range(8):
-        arry = value[r]
-        tmpArry.append(arry[q]+80)
+	tmpValue = ((librosaMel[r])[q])+80
+        tmpArry.append(int(tmpValue*scaleFactor))
     frameArry.append(tmpArry)
 
-print("Frame Array: ")
-print(frameArry)
+print("Frame Array Finished")
 np.savetxt("C:\\newdataArry.dat", frameArry)
+
+
+
+
+
+
+
+
+
 
 print(stopscript)
 os.system("pause")
