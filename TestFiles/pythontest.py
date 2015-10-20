@@ -16,36 +16,32 @@ for s in D:
     t=s
     value.append(t)
 
-print(value)
-
 for s in value[1]:
     samples = samples + 1
 
-print(samples)
-
-arry = []
-for r in range(8):
-    arry = value[r]
-    for q in range(samples):
-        print("Hi")
-print("Samp: ")
+print("Array: ")
+print(value)
+print("Samples: ")
 print(samples)
 print("Frames: ")
 frames = (samples * 512) / 1000
 print(frames)
 print("Seconds: ")
-print(frames/24)
+print(frames/frameRate)
     		
+arry = []
+frameArry = []
 
+for q in range(samples):
+    tmpArry = []
+    for r in range(8):
+        arry = value[r]
+        tmpArry.append(arry[q]+80)
+    frameArry.append(tmpArry)
 
+print("Frame Array: ")
+print(frameArry)
+np.savetxt("C:\\newdataArry.dat", frameArry)
 
-
-freqBuckets=value[1]
-
-for i in freqBuckets:
-    totSamp = totSamp + 1
-
-for i in range (8):
-    freqBuckets = value[i]
-
+print(stopscript)
 os.system("pause")
