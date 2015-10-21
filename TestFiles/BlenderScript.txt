@@ -10,23 +10,35 @@ except:
     pass
 
 
-f = open('C:\\BeatTimes.dat','r')
+beatFile = open('C:\\BeatTimes.dat','r')
 beatData = []
-for line in f.readlines():
+for line in beatFile.readlines():
     beatData.extend(line.split())
-f.close()
+beatFile.close()
 
 beatTimes = []
 beatFrames = []
 beats = 0
-for i in beatData:
-    tmp = i
+for i in range(len(beatData)):
+    tmp = beatData[i]
     beatTimes.append(float(tmp))
     beats = beats + 1
     beatFrames.append(int(beatTimes[beats-1]*24))
-    print(beatFrames[beats-1])
 
-lastFrame = beatFrames[beats-1]
+print("Beats Finished Importing")
+print("Beats: " + str(beatFrames[beats-1]))
+
+melFile = open('C:\\MelFrameArray.dat','r')
+melData = []
+for line in melFile.readlines():
+    melData.append(line.split())
+melFile.close()
+
+maxFrames = len(melData)
+
+print("Mel Finished Importing")
+print("Mel Frames: " + str(maxFrames))
+print("Mel Bins: " + str(len(melData[1])))
 
 strPath = r"C:\andre.mp3"
 
@@ -47,9 +59,11 @@ meshLoc.zero()
 (varA,varB,varC) = (0.5, 1.0, 2.0)
 
 faces = ((1,0,4), (4,2,1), (4,3,2), (4,0,3), (0,1,2,3))
-sys.exit("This will stop the script!")
+#sys.exit("This will stop the script!")
 for i in range(-4,4):
     
+    print("")
+    print("Object being animated: " + str(i+4))
     verts = (((varA)+i,varA,0), ((varA)+i,-varA,0), ((-varA)+i,-varA,0), ((-varA)+i,varA,0), (0+i,0,1))
     me = bpy.data.meshes.new(name+'Mesh'+str(i+4))
     ob = bpy.data.objects.new(name + str(i+4), me)
@@ -59,15 +73,30 @@ for i in range(-4,4):
     ob.show_name = False
 
     scn = bpy.context.scene
+    scn.frame_end = maxFrames
     scn.objects.link(ob)
     scn.objects.active = ob
     
     me.from_pydata(verts, [], faces)
     me.update()
     ob.location = meshLoc
-
-    for frameNumber in range (1,250):
-        ob.keyframe_insert(data_path="scale", index = 1, frame =frameNumber)
-        ob.scale = (1, 2*sin((frameNumber+(4*i))/10), 1)
     
+    counter = 0
+    
+    for frameNumber in range (1,maxFrames):
+
+        tmpArry = melData[frameNumber]
+        tmpNum = tmpArry[(i+4)]
+        tmpNum = (float(tmpNum) + 1)/5
+
+        ob.scale = (1, 2*sin((i + (frameNumber)/10)), tmpNum)
+        ob.keyframe_insert(data_path="scale", index = 1, frame =frameNumber)
+        ob.keyframe_insert(data_path="scale", index = 2, frame =frameNumber)
+        
+        counter = counter + 1
+        if(counter==1000):
+            print("Frame " + str(frameNumber) + " finished...")
+            counter = 0
+    
+    print("Object " + str(i+4) + " finished, with " + str(maxFrames) + " frames keyed.")
     ob.select = False

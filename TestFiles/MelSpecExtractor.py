@@ -9,17 +9,21 @@ import os
 
 # declare constants
 #
+audioPath = "C:\\andre.mp3"
+samplesPerFrame = 2
+melBins = 8
 frameRate = 24
 sampleRate = 1000 * frameRate
-melBins = 8
-sampleHop = 500
+sampleHop = (sampleRate/frameRate)/samplesPerFrame
+timeArray = []
+scaleFactor = 100/80
 
 # setup librosa functions/processing
 #
-y, sr = librosa.load("C:\\andre.mp3", sr=sampleRate)
+y, sr = librosa.load(audioPath, sr=sampleRate)
 S = librosa.feature.melspectrogram(y=y, sr=sampleRate, n_mels=melBins,fmax=8000,hop_length = sampleHop)
 librosaMel = librosa.logamplitude(S,ref_power=np.max)
-np.savetxt("C:\\newdata.dat", librosaMel)
+
 samples = len(librosaMel[1])
 
 # print out some information about what we're working with
@@ -29,19 +33,15 @@ print(librosaMel)
 print("Samples: ")
 print(samples)
 print("Anim. Frames: ")
-frames = (frameRate * (samples * sampleHop)) / sampleRate
+frames = samples/samplesPerFrame
 print(frames)
 print("Samples/Frame: ")
-frameConversionRate = float(samples)/float(frames)
-print(frameConversionRate)
+print(samplesPerFrame)
 print("Seconds: ")
 print(frames/frameRate)
 
 # convert the bin based Mel spectrogram array to a time based array
 #	
-timeArray = []
-scaleFactor = 100/80
-
 for q in range(samples):
     tmpArry = []
     for r in range(melBins):
@@ -50,13 +50,16 @@ for q in range(samples):
     timeArray.append(tmpArry)
 np.savetxt("C:\\MelTimeArray.dat", timeArray)
 
-# downconvert the time array into an animation frame array
+# downconvert the time based array into an animation frame array
 #
 frameArray = []
-for q in range(samples/frameConversionRate):
+for q in range(frames):
     tmpArry = []
     for r in range(melBins):
-	tmpValue = (((timeArray[(2*q)])[r])+((timeArray[(2*q)+1])[r]))/2
+        tempValue = 0
+        for s in range(samplesPerFrame):
+	    tmpValue = tempValue + ((timeArray[(2*q)+s])[r])
+        tmpValue = tmpValue / samplesPerFrame
         tmpArry.append(int(tmpValue))
     frameArray.append(tmpArry)
 np.savetxt("C:\\MelFrameArray.dat", frameArray)
@@ -66,5 +69,4 @@ np.savetxt("C:\\MelFrameArray.dat", frameArray)
 print("Frame Array Construction Finished")
 print("")
 
-print(stopscript)
 os.system("pause")
