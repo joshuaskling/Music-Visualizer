@@ -2,24 +2,40 @@ import bpy
 
 #delete all left over cone in the scene
 for obj in bpy.data.objects:
-    if 'Cone' in str(obj):
+    if 'Cube' in str(obj):
         bpy.data.objects[obj.name].select = True
 bpy.ops.object.delete()
     
 #numCones will be the number of cones created in the scene
-numCones = 10
+numCones = 30
 #create the number of desired cones and apply transforms to the cone based on audio
 for i in range(0,numCones):
     #create Cone
-    bpy.ops.mesh.primitive_cone_add(vertices=4, radius1=1, depth=1,  location=(0.0, i-numCones/2+.5, 0.5))
+    bpy.ops.mesh.primitive_cube_add(radius=1, location=(0.0, i-numCones/2+.5, 0))
+    
+    #set context
+    bpy.context.scene.cursor_location = bpy.context.active_object.location
+    bpy.context.scene.cursor_location.y -= 1
+    bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
     
     #bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
     
-    #Thiese 3 lines tell blender to animate scaling, but not on x and y
+    #These 3 lines tell blender to animate scaling, but not on x and y
     bpy.ops.anim.keyframe_insert_menu(type='Scaling')
     bpy.context.active_object.animation_data.action.fcurves[0].lock = True
     bpy.context.active_object.animation_data.action.fcurves[1].lock = True
     
-    #Determine scaling range of the cones
+    #Set the window context to the graph editor
+    bpy.context.area.type = 'GRAPH_EDITOR'
     
-    #bpy.ops.graph.sound_bake(filepath=r'C:\andre.mp3', low = (l), high = (h))
+    #Determine scaling range of the cones
+    lows =  (i+3)**2 + 200
+    highs = (i+4)**2 + 200
+    
+    bpy.ops.graph.sound_bake(filepath=r'C:\andre.mp3', low = (lows), high = (highs))
+    
+    #lock z scaling
+    bpy.context.active_object.animation_data.action.fcurves[2].lock = True
+    
+bpy.context.area.type = 'TEXT_EDITOR'
+    
