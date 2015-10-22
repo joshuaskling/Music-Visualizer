@@ -147,8 +147,8 @@ for i in range(int((melBins/2)-melBins),int(melBins/2)):
         #
         #locX = 2*i
         #locY = sin((frameNumber/10)+(pi*(i/(melBins/2))))
-        locX = 5 * cos(i/2 + frameNumber/100)
-        locY = 5 * sin(i/2 + frameNumber/100)
+        locX = 5 * cos(i/2 * float(volumeData[frameNumber])/50)
+        locY = 5 * sin(i/2 * float(volumeData[frameNumber])/50)
         locZ = 0
 
         ob.location = (locX,locY,locZ)
@@ -159,13 +159,14 @@ for i in range(int((melBins/2)-melBins),int(melBins/2)):
         #
         angleX = 0
         angleY = 0
-        #angleZ = frameNumber/3
+        angleZ = frameNumber/3
         #angleZ = frameNumber/3 * float(volumeData[frameNumber])/100
-        angleZ = locX*locY*5
+        #angleZ = locX*locY*5
 
         angleX = (((angleX%360)-180)/180)*(pi)
         angleY = (((angleY%360)-180)/180)*(pi)
         angleZ = (((angleZ%360)-180)/180)*(pi)
+        #angleZ = (((angleZ%360)-180)/180)*(float(volumeData[frameNumber])/100)
         axisX = [1,0,0]
         axisY = [0,1,0]
         axisZ = [0,0,1]
