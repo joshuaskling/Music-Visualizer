@@ -67,7 +67,7 @@ for q in range(frames):
         tmpValue = tmpValue / samplesPerFrame
         tmpArry.append(int(tmpValue))
     frameArray.append(tmpArry)
-np.savetxt("C:\\8_bin_mel.lfa", frameArray)
+np.savetxt("C:\\n_bin_mel.lfa", frameArray)
 
 # confirm script execution
 #
