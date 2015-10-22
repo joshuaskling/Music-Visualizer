@@ -1,0 +1,177 @@
+import bpy, math
+from math import sin, cos, pi
+from mathutils import Vector, Quaternion
+
+# clean up the initial workspace
+#
+try:
+    bpy.data.objects['Cube'].select = True
+    bpy.ops.object.delete() 
+except: 
+    pass
+
+# open and insert the song into blender
+#
+songPath = "C:/classicTest.mp3"
+
+area = bpy.context.area
+old_type = area.type
+area.type = 'SEQUENCE_EDITOR'
+bpy.ops.sequencer.sound_strip_add(filepath=songPath)
+area.type = old_type
+
+# open and load the beat times information
+#
+beatData = []
+
+beatFile = open('C:\\beat_frames.lfa','r')
+for line in beatFile.readlines():
+    beatData.extend(line.split())
+beatFile.close()
+
+beatFrames = []
+beats = 0
+for i in range(len(beatData)):
+    tmp = beatData[i]
+    beatFrames.append(int(float(tmp)))
+
+print("")
+print("")
+print("Beats Finished Importing")
+print("Beats: " + str(len(beatData)))
+print("")
+
+# open and load the mel volume information
+#
+volumeData = []
+volumeFile = open('C:\\1_bin_mel.lfa','r')
+for line in volumeFile.readlines():
+    volumeData.extend(line.split())
+volumeFile.close()
+
+# open and load mel information
+#
+MelData = []
+
+melFile = open('C:\\n_bin_mel.lfa','r')
+for line in melFile.readlines():
+    MelData.append(line.split())
+melFile.close()
+
+maxFrames = len(MelData)
+melBins = len(MelData[0])
+
+print("Mel Finished Importing")
+print("Mel Frames: " + str(maxFrames))
+print("Mel Bins: " + str(melBins))
+print("")
+
+# setup some basic parameters before creating/animating objects
+#
+objectName = 'CustomObject'
+
+scn = bpy.context.scene
+scn.frame_end = maxFrames
+
+origin = Vector().zero()
+meshLoc = Vector().zero()
+
+(varA,varB,varC) = (0.5, 1.0, 0.0)
+faces = ((1,0,4), (4,2,1), (4,3,2), (4,0,3), (0,1,2,3))
+verts = ((varA,varA,varC), (varA,-varA,varC), (-varA,-varA,varC), (-varA,varA,varC), (varC,varC,varB))
+
+#sys.exit("This will stop the script!")
+
+for i in range(int((melBins/2)-melBins),int(melBins/2)):
+    
+    # let the user know which object is being worked on
+    #
+    print("")
+    print("Object being animated: " + str(i+1+int(melBins/2)))
+
+    # setup the object mesh and material and insert into scene
+    #
+    me = bpy.data.meshes.new(objectName+'Mesh'+str(i+int(melBins/2)))
+    ob = bpy.data.objects.new(objectName + str(i+int(melBins/2)), me)
+
+    mat = bpy.data.materials.new("CustomColor" + str(i+int(melBins/2)))
+    mat.diffuse_color = (1,1,1)
+    ob.active_material = mat
+
+    scn.objects.link(ob)
+    scn.objects.active = ob
+
+    ob.show_name = False
+    ob.rotation_mode = 'QUATERNION'
+
+    me.from_pydata(verts, [], faces)
+    me.update()
+    
+    # script the animation for each object
+    #
+    for frameNumber in range (1,maxFrames):
+
+        # basic setup and housekeeping for frame animation
+        #
+        frameMelDataPerBin = (MelData[frameNumber])[(i+int(melBins/2))]
+
+        # set the object scaling and write a keyframe (SCALING PIPES)
+        #
+        scaleX = 1
+
+        scaleY = float(volumeData[frameNumber])/8
+
+        scaleZ = frameMelDataPerBin
+        scaleZ = ((float(scaleZ))/20) + 0.1
+        scaleZ = scaleZ*scaleZ
+
+        ob.scale = (scaleX, scaleY, scaleZ)
+        ob.keyframe_insert(data_path="scale", index=-1, frame=frameNumber)
+
+        # set the object color and write a keyframe (COLOR PIPES)
+        #
+        colRed =   ( sin( pi*(i/(melBins/2))                      ) +1) /2
+        colGreen = ( cos(-pi*(i/(melBins/2))                      ) +1) /2
+        colBlue =  ( sin( (frameNumber/55) + (pi*(i/(melBins/2))) ) +1) /2
+
+        mat.diffuse_color = (colRed,colGreen,colBlue)
+        mat.keyframe_insert(data_path="diffuse_color", frame=frameNumber, index=-1)
+
+        # set the object location and write a keyframe (LOCATION PIPES)
+        #
+        locX = 2*i
+        locY = sin((frameNumber/10)+(pi*(i/(melBins/2))))
+        locZ = 0
+
+        ob.location = (locX,locY,locZ)
+        #delta_location
+        ob.keyframe_insert(data_path="location", index = -1, frame=frameNumber)
+
+        # set the object rotation and write a keyframe (ROTATION PIPES)
+        #
+        angleX = 0
+        angleY = 0
+        angleZ = frameNumber/3
+
+        angleX = (((angleX%360)-180)/180)*(pi)
+        angleY = (((angleY%360)-180)/180)*(pi)
+        angleZ = (((angleZ%360)-180)/180)*(pi)
+        axisX = [1,0,0]
+        axisY = [0,1,0]
+        axisZ = [0,0,1]
+
+        objectRotation = Quaternion(axisX,angleX) * Quaternion(axisY,angleY) * Quaternion(axisZ,angleZ)
+        objectRotation.normalize()
+        
+        ob.rotation_quaternion = objectRotation
+        ob.keyframe_insert(data_path="rotation_quaternion", index = -1, frame=frameNumber)
+
+        # print out some information about the rendering process
+        #
+        if(frameNumber%1000==0):
+            print("Frame " + str(frameNumber) + " finished...")
+    
+    # print out some information about the rendering process and forget about the finished object
+    #
+    print("Object " + str(i+1+int(melBins/2)) + " finished, with " + str(maxFrames) + " frames keyed.")
+    ob.select = False
