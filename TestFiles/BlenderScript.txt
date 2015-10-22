@@ -10,6 +10,16 @@ try:
 except: 
     pass
 
+# open and insert the song into blender
+#
+songPath = r"C:\andre.mp3"
+
+area = bpy.context.area
+old_type = area.type
+area.type = 'SEQUENCE_EDITOR'
+bpy.ops.sequencer.sound_strip_add(filepath=songPath)
+area.type = old_type
+
 # open and load the beat times information
 #
 beatData = []
@@ -23,9 +33,7 @@ beatFrames = []
 beats = 0
 for i in range(len(beatData)):
     tmp = beatData[i]
-    beatTimes.append(float(tmp))
-    beats = beats + 1
-    beatFrames.append(int(beatTimes[beats-1]*24))
+    beatFrames.append(int(float(tmp)))
 
 print("")
 print("")
@@ -42,18 +50,18 @@ volumeFile.close()
 
 # open and load 8 channel mel information
 #
-8binMelData = []
+eightBinMelData = []
 
 melFile = open('C:\\8_bin_mel.lfa','r')
 for line in melFile.readlines():
-    8binMelData.append(line.split())
+    eightBinMelData.append(line.split())
 melFile.close()
 
-maxFrames = len(8binMelData)
+maxFrames = len(eightBinMelData)
 
 print("Mel Finished Importing")
 print("Mel Frames: " + str(maxFrames))
-print("Mel Bins: " + str(len(melData[1])))
+print("Mel Bins: " + str(len(eightBinMelData[0])))
 
 # setup some basic parameters before creating/animating objects
 #
@@ -106,20 +114,20 @@ for i in range(-4,4):
 
         scaleY = float(volumeData[frameNumber])/8
 
-        scaleZ = ((8binMelData[frameNumber])[(i+4)])
+        scaleZ = ((eightBinMelData[frameNumber])[(i+4)])
         scaleZ = (float(scaleZ))/8
 
         ob.scale = (scaleX, scaleY, scaleZ)
 
+        ob.keyframe_insert(data_path="scale", index = 0, frame =frameNumber)
         ob.keyframe_insert(data_path="scale", index = 1, frame =frameNumber)
         ob.keyframe_insert(data_path="scale", index = 2, frame =frameNumber)
-        ob.keyframe_insert(data_path="scale", index = 3, frame =frameNumber)
 
         # set the object color and write a keyframe (COLOR PIPES)
         #
         colRed =   ( sin(frameNumber/100)   +1)/2
         colGreen = ( cos(frameNumber/100)   +1)/2
-        colBlue =  ( sin(frameNumber*i/50)  +1)/2
+        colBlue =  ( sin(frameNumber*(i*2.16736)/55)  +1)/2
 
         mat.diffuse_color = (colRed,colGreen,colBlue)
         
