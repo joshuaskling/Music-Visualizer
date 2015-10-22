@@ -11,7 +11,7 @@ if len(sys.argv) < 2:
 
 # declare constants
 #
-audio_path = sys.argv[1]
+audio_path = "./" + sys.argv[1]
 frameRate = 24
 sampleRate = 1000 * frameRate
 
@@ -35,7 +35,7 @@ for i in beatArray:
 	i = float(i)
 	i = i / 100
 	frameArray.append(int(i*24))
-np.savetxt("C:/beat_frames.lfa", frameArray)
+np.savetxt("./Output/beat_frames.lfa", frameArray)
 
 # confirm script execution
 #

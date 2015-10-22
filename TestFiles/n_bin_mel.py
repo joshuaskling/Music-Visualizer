@@ -12,7 +12,7 @@ if len(sys.argv) < 3:
 
 # declare constants
 #
-audioPath = sys.argv[1]
+audioPath = "./" + sys.argv[1]
 samples = 0
 frames = 0
 samplesPerFrame = 2
@@ -71,7 +71,7 @@ for q in range(frames):
         tmpValue = tmpValue / samplesPerFrame
         tmpArry.append(int(tmpValue))
     frameArray.append(tmpArry)
-np.savetxt("C:/n_bin_mel.lfa", frameArray)
+np.savetxt("./Output/n_bin_mel.lfa", frameArray)
 
 # confirm script execution
 #

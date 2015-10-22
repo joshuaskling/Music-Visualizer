@@ -1,5 +1,5 @@
 cls
-SET/P song=Enter song path:
+SET/P song=Enter song name and extension:
 cls
 SET/P bins=Enter number of mel bins (must be even):
 cls
