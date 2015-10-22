@@ -10,6 +10,12 @@ try:
 except: 
     pass
 
+#delete all left over cone in the scene
+for obj in bpy.data.objects:
+    if 'Custom' in str(obj):
+        bpy.data.objects[obj.name].select = True
+bpy.ops.object.delete()
+
 # open and insert the song into blender
 #
 songPath = r"C:\classicalTest.mp3"
@@ -151,7 +157,8 @@ for i in range(int((melBins/2)-melBins),int(melBins/2)):
         #
         angleX = 0
         angleY = 0
-        angleZ = frameNumber/3
+        #angleZ = frameNumber/3
+        angleZ = frameNumber/3 * float(volumeData[frameNumber])/100
 
         angleX = (((angleX%360)-180)/180)*(pi)
         angleY = (((angleY%360)-180)/180)*(pi)
@@ -161,6 +168,7 @@ for i in range(int((melBins/2)-melBins),int(melBins/2)):
         axisZ = [0,0,1]
 
         objectRotation = Quaternion(axisX,angleX) * Quaternion(axisY,angleY) * Quaternion(axisZ,angleZ)
+        
         objectRotation.normalize()
         
         ob.rotation_quaternion = objectRotation
