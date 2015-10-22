@@ -16,7 +16,7 @@ audioPath = sys.argv[1]
 samples = 0
 frames = 0
 samplesPerFrame = 2
-melBins = sys.argv[3]
+melBins = sys.argv[2]
 frameRate = 24
 sampleRate = 1000 * frameRate
 sampleHop = (sampleRate/frameRate)/samplesPerFrame
@@ -71,7 +71,7 @@ for q in range(frames):
         tmpValue = tmpValue / samplesPerFrame
         tmpArry.append(int(tmpValue))
     frameArray.append(tmpArry)
-np.savetxt("C:/" + sys.argv[2] + "_bin_mel.lfa", frameArray)
+np.savetxt("C:/n_bin_mel.lfa", frameArray)
 
 # confirm script execution
 #
