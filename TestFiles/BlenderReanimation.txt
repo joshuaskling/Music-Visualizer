@@ -2,24 +2,6 @@ import bpy, math
 from math import sin, cos, pi
 from mathutils import Vector, Quaternion
 
-# clean up the initial workspace
-#
-try:
-    bpy.data.objects['Cube'].select = True
-    bpy.ops.object.delete() 
-except: 
-    pass
-
-# open and insert the song into blender
-#
-songPath = r"C:\song.mp3"
-
-area = bpy.context.area
-old_type = area.type
-area.type = 'SEQUENCE_EDITOR'
-bpy.ops.sequencer.sound_strip_add(filepath=songPath)
-area.type = old_type
-
 # open and load the beat times information
 #
 beatData = []
@@ -38,7 +20,7 @@ for i in range(len(beatData)):
 print("")
 print("")
 print("Beats Finished Importing")
-print("Beats: " + str(len(beatData)))
+print("Beats: " + str(beatFrames[beats-1]))
 print("")
 
 # open and load the mel volume information
@@ -69,43 +51,25 @@ print("")
 # setup some basic parameters before creating/animating objects
 #
 objectName = 'CustomObject'
-
 scn = bpy.context.scene
-scn.frame_end = maxFrames
-
-origin = Vector().zero()
-meshLoc = Vector().zero()
-
-(varA,varB,varC) = (0.5, 1.0, 0.0)
-faces = ((1,0,4), (4,2,1), (4,3,2), (4,0,3), (0,1,2,3))
-verts = ((varA,varA,varC), (varA,-varA,varC), (-varA,-varA,varC), (-varA,varA,varC), (varC,varC,varB))
-
 #sys.exit("This will stop the script!")
 
-for i in range(int((melBins/2)-melBins),int(melBins/2)):
+for i in range(-4,4):
     
     # let the user know which object is being worked on
     #
     print("")
-    print("Object being animated: " + str(i+1+int(melBins/2)))
+    print("Object being re-animated: " + str(i+5))
 
     # setup the object mesh and material and insert into scene
     #
-    me = bpy.data.meshes.new(objectName+'Mesh'+str(i+int(melBins/2)))
-    ob = bpy.data.objects.new(objectName + str(i+int(melBins/2)), me)
+    ob = bpy.data.objects[objectName + str(i+4)]
 
-    mat = bpy.data.materials.new("CustomColor" + str(i+int(melBins/2)))
-    mat.diffuse_color = (1,1,1)
-    ob.active_material = mat
+    mat = bpy.data.materials["CustomColor" + str(i+4)]
 
-    scn.objects.link(ob)
     scn.objects.active = ob
 
-    ob.show_name = False
     ob.rotation_mode = 'QUATERNION'
-
-    me.from_pydata(verts, [], faces)
-    me.update()
     
     # script the animation for each object
     #
@@ -173,5 +137,5 @@ for i in range(int((melBins/2)-melBins),int(melBins/2)):
     
     # print out some information about the rendering process and forget about the finished object
     #
-    print("Object " + str(i+1+int(melBins/2)) + " finished, with " + str(maxFrames) + " frames keyed.")
+    print("Object " + str(i+5) + " finished, with " + str(maxFrames) + " frames keyed.")
     ob.select = False
