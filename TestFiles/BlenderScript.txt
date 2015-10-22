@@ -1,6 +1,6 @@
 import bpy, math
-from math import sin, cos
-from mathutils import Vector
+from math import sin, cos, pi
+from mathutils import Vector, Quaternion
 
 # clean up the initial workspace
 #
@@ -38,7 +38,8 @@ for i in range(len(beatData)):
 print("")
 print("")
 print("Beats Finished Importing")
-print("Beats: " + str(beatFrames[beats-1]))
+print("Beats: " + str(len(beatData)))
+print("")
 
 # open and load the mel volume information
 #
@@ -48,20 +49,22 @@ for line in volumeFile.readlines():
     volumeData.extend(line.split())
 volumeFile.close()
 
-# open and load 8 channel mel information
+# open and load mel information
 #
-eightBinMelData = []
+MelData = []
 
 melFile = open('C:\\8_bin_mel.lfa','r')
 for line in melFile.readlines():
-    eightBinMelData.append(line.split())
+    MelData.append(line.split())
 melFile.close()
 
-maxFrames = len(eightBinMelData)
+maxFrames = len(MelData)
+melBins = len(MelData[0])
 
 print("Mel Finished Importing")
 print("Mel Frames: " + str(maxFrames))
-print("Mel Bins: " + str(len(eightBinMelData[0])))
+print("Mel Bins: " + str(melBins))
+print("")
 
 # setup some basic parameters before creating/animating objects
 #
@@ -73,25 +76,25 @@ scn.frame_end = maxFrames
 origin = Vector().zero()
 meshLoc = Vector().zero()
 
-(varA,varB,varC) = (0.5, 1.0, 2.0)
+(varA,varB,varC) = (0.5, 1.0, 0.0)
 faces = ((1,0,4), (4,2,1), (4,3,2), (4,0,3), (0,1,2,3))
-verts = (((varA),varA,0), ((varA),-varA,0), ((-varA),-varA,0), ((-varA),varA,0), (0,0,1))
+verts = ((varA,varA,varC), (varA,-varA,varC), (-varA,-varA,varC), (-varA,varA,varC), (varC,varC,varB))
 
 #sys.exit("This will stop the script!")
 
-for i in range(-4,4):
+for i in range(int((melBins/2)-melBins),int(melBins/2)):
     
     # let the user know which object is being worked on
     #
     print("")
-    print("Object being animated: " + str(i+4))
+    print("Object being animated: " + str(i+1+int(melBins/2)))
 
     # setup the object mesh and material and insert into scene
     #
-    me = bpy.data.meshes.new(objectName+'Mesh'+str(i+4))
-    ob = bpy.data.objects.new(objectName + str(i+4), me)
+    me = bpy.data.meshes.new(objectName+'Mesh'+str(i+int(melBins/2)))
+    ob = bpy.data.objects.new(objectName + str(i+int(melBins/2)), me)
 
-    mat = bpy.data.materials.new("CustomColor" + str(i+4))
+    mat = bpy.data.materials.new("CustomColor" + str(i+int(melBins/2)))
     mat.diffuse_color = (1,1,1)
     ob.active_material = mat
 
@@ -101,6 +104,8 @@ for i in range(-4,4):
     objectSpacing = (2*i,0,0)
     ob.location = objectSpacing
     ob.show_name = False
+    ob.rotation_mode = 'QUATERNION'
+
     me.from_pydata(verts, [], faces)
     me.update()
     
@@ -114,24 +119,41 @@ for i in range(-4,4):
 
         scaleY = float(volumeData[frameNumber])/8
 
-        scaleZ = ((eightBinMelData[frameNumber])[(i+4)])
+        scaleZ = ((MelData[frameNumber])[(i+int(melBins/2))])
         scaleZ = (float(scaleZ))/8
 
         ob.scale = (scaleX, scaleY, scaleZ)
-
-        ob.keyframe_insert(data_path="scale", index = 0, frame =frameNumber)
-        ob.keyframe_insert(data_path="scale", index = 1, frame =frameNumber)
-        ob.keyframe_insert(data_path="scale", index = 2, frame =frameNumber)
+        ob.keyframe_insert(data_path="scale", index=-1, frame=frameNumber)
 
         # set the object color and write a keyframe (COLOR PIPES)
         #
-        colRed =   ( sin(frameNumber/100)   +1)/2
-        colGreen = ( cos(frameNumber/100)   +1)/2
-        colBlue =  ( sin(frameNumber*(i*2.16736)/55)  +1)/2
+        colRed =   ( sin( i/5                    )   +1)/2
+        colGreen = ( cos( i/5                    )   +1)/2
+        colBlue =  ( sin( (frameNumber/55) +(i/5))   +1)/2
 
         mat.diffuse_color = (colRed,colGreen,colBlue)
-        
         mat.keyframe_insert(data_path="diffuse_color", frame=frameNumber, index=-1)
+
+        # set the object rotation and write a keyframe (ROTATION PIPES)
+        #
+        angleX = frameNumber/5
+       
+        angleY = frameNumber/10
+
+        angleZ = frameNumber
+
+        angleX = ((angleX%180)/180)*(pi)
+        angleY = ((angleY%180)/180)*(pi)
+        angleZ = ((angleZ%180)/180)*(pi)
+        axisX = [1,0,0]
+        axisY = [0,1,0]
+        axisZ = [0,0,1]
+
+        objectRotation = Quaternion(axisX,angleX) * Quaternion(axisY,angleY) * Quaternion(axisZ,angleZ)
+        objectRotation.normalize()
+        
+        ob.rotation_quaternion = objectRotation
+        ob.keyframe_insert(data_path="rotation_quaternion", index = -1, frame =frameNumber)
 
         # print out some information about the rendering process
         #
@@ -140,5 +162,5 @@ for i in range(-4,4):
     
     # print out some information about the rendering process and forget about the finished object
     #
-    print("Object " + str(i+4) + " finished, with " + str(maxFrames) + " frames keyed.")
+    print("Object " + str(i+1+int(melBins/2)) + " finished, with " + str(maxFrames) + " frames keyed.")
     ob.select = False
