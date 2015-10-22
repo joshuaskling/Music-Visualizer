@@ -1,14 +1,17 @@
 import librosa
 import numpy as np
 import os
+import sys
 
 # function declarations
 #
 
+if len(sys.argv) < 2:
+	sys.exit("Not enough parameters. Please provide song location.")
 
 # declare constants
 #
-audioPath = "C:\\classicalTest.mp3"
+audioPath = sys.argv[1]
 samplesPerFrame = 2
 melBins = 1
 frameRate = 24
@@ -64,7 +67,7 @@ for q in range(frames):
         tmpArry.append(int(tmpValue))
     frameArray.append(tmpArry)
 
-np.savetxt("C:\\1_bin_mel.lfa", frameArray)
+np.savetxt("C:/1_bin_mel.lfa", frameArray)
 
 # confirm script execution
 #
@@ -72,4 +75,4 @@ print("Frame Array Construction Finished")
 print(frameArray)
 print("")
 
-os.system("pause")
+#os.system("pause")

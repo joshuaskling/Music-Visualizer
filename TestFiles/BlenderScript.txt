@@ -12,7 +12,7 @@ except:
 
 # open and insert the song into blender
 #
-songPath = r"C:\song.mp3"
+songPath = "C:/classicTest.mp3"
 
 area = bpy.context.area
 old_type = area.type
