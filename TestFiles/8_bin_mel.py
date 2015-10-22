@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import librosa
 import numpy as np
 import os
@@ -10,8 +9,10 @@ import os
 # declare constants
 #
 audioPath = "C:\\andre.mp3"
+samples = 0
+frames = 0
 samplesPerFrame = 2
-melBins = 1
+melBins = 8
 frameRate = 24
 sampleRate = 1000 * frameRate
 sampleHop = (sampleRate/frameRate)/samplesPerFrame
@@ -24,19 +25,24 @@ y, sr = librosa.load(audioPath, sr=sampleRate)
 S = librosa.feature.melspectrogram(y=y, sr=sampleRate, n_mels=melBins,fmax=8000,hop_length = sampleHop)
 librosaMel = librosa.logamplitude(S,ref_power=np.max)
 
-samples = len(librosaMel[0])
+
 
 # print out some information about what we're working with
 #
 print("Array: ")
 print(librosaMel)
+
 print("Samples: ")
+samples = len(librosaMel[1])
 print(samples)
+
 print("Anim. Frames: ")
 frames = samples/samplesPerFrame
 print(frames)
+
 print("Samples/Frame: ")
 print(samplesPerFrame)
+
 print("Seconds: ")
 print(frames/frameRate)
 
@@ -48,7 +54,6 @@ for q in range(samples):
 	tmpValue = ((librosaMel[r])[q])+80
         tmpArry.append(int(tmpValue*scaleFactor))
     timeArray.append(tmpArry)
-np.savetxt("C:\\MelTimeArray.dat", timeArray)
 
 # downconvert the time based array into an animation frame array
 #
@@ -62,8 +67,7 @@ for q in range(frames):
         tmpValue = tmpValue / samplesPerFrame
         tmpArry.append(int(tmpValue))
     frameArray.append(tmpArry)
-
-np.savetxt("C:\\SingleChannelMel.dat", frameArray)
+np.savetxt("C:\\8_bin_mel.lfa", frameArray)
 
 # confirm script execution
 #

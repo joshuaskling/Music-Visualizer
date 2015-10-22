@@ -1,1 +1,1 @@
-Testing files include two test scripts to find tempo and beats for a song and the other script creates a graph with a similar method.
+This set of scripts allows a user to produce a Blender animation based on sound files. The initial scripts produce some discreet output and Blender then imports this information and uses it to drive custom created and animated objects, all programatically.

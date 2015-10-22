@@ -1,8 +1,5 @@
 import librosa
-import matplotlib.pyplot as plt
 import numpy as np
-import seaborn
-import IPython.display
 import os
 
 # function declarations
@@ -28,21 +25,18 @@ print(tempo)
 
 # setup, fill, and save time and frame values for beat info
 #
-timeArray = []
 frameArray = []
 for i in beatArray:
 	i = i * 100
 	i = int(i)
 	i = float(i)
 	i = i / 100
-	timeArray.append(i)
 	frameArray.append(int(i*24))
-np.savetxt("C:\\BeatTimes.dat", timeArray)
-np.savetxt("C:\\BeatFrames.dat", frameArray)
+np.savetxt("C:\\beat_frames.lfa", frameArray)
 
 # confirm script execution
 #
-print(timeArray)
+print("Frame Array Construction Finished: ")
 print(frameArray)
 print("")
 
