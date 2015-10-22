@@ -1,6 +1,7 @@
 import bpy, math
-from math import sin
+from math import sin, cos
 from mathutils import Vector
+
 
 
 try:
@@ -25,8 +26,16 @@ for i in range(len(beatData)):
     beats = beats + 1
     beatFrames.append(int(beatTimes[beats-1]*24))
 
+print("")
+print("")
 print("Beats Finished Importing")
 print("Beats: " + str(beatFrames[beats-1]))
+
+volumeFile = open('C:\\SingleChannelMel.dat','r')
+volumeData = []
+for line in volumeFile.readlines():
+    volumeData.extend(line.split())
+volumeFile.close()
 
 melFile = open('C:\\MelFrameArray.dat','r')
 melData = []
@@ -60,16 +69,23 @@ meshLoc.zero()
 
 faces = ((1,0,4), (4,2,1), (4,3,2), (4,0,3), (0,1,2,3))
 #sys.exit("This will stop the script!")
+
 for i in range(-4,4):
     
     print("")
     print("Object being animated: " + str(i+4))
-    verts = (((varA)+i,varA,0), ((varA)+i,-varA,0), ((-varA)+i,-varA,0), ((-varA)+i,varA,0), (0+i,0,1))
+    verts = (((varA),varA,0), ((varA),-varA,0), ((-varA),-varA,0), ((-varA),varA,0), (0,0,1))
     me = bpy.data.meshes.new(name+'Mesh'+str(i+4))
-    ob = bpy.data.objects.new(name + str(i+4), me)
 
+    ob = bpy.data.objects.new(name + str(i+4), me)
+    
+    mat = bpy.data.materials.new("CustomColor" + str(i+4))
+    
+    ob.active_material = mat
+    
+    mat.diffuse_color = (1,1,1)
+    
     meshLoc = (i,0,0)
-    ob.location = origin
     ob.show_name = False
 
     scn = bpy.context.scene
@@ -89,10 +105,13 @@ for i in range(-4,4):
         tmpNum = tmpArry[(i+4)]
         tmpNum = (float(tmpNum) + 1)/5
 
-        ob.scale = (1, 2*sin((i + (frameNumber)/10)), tmpNum)
+        ob.scale = (1, float(volumeData[frameNumber])/5, tmpNum)
+        mat.diffuse_color = ((sin(frameNumber/100)+1)/2,(cos(frameNumber/100)+1)/2,(sin(frameNumber*i/50)+1)/2)
+        
         ob.keyframe_insert(data_path="scale", index = 1, frame =frameNumber)
         ob.keyframe_insert(data_path="scale", index = 2, frame =frameNumber)
-        
+        mat.keyframe_insert(data_path="diffuse_color", frame=frameNumber, index=-1)
+
         counter = counter + 1
         if(counter==1000):
             print("Frame " + str(frameNumber) + " finished...")
