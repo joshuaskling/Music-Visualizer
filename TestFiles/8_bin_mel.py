@@ -8,11 +8,11 @@ import os
 
 # declare constants
 #
-audioPath = "C:\\andre.mp3"
+audioPath = "C:\\classicalTest.mp3"
 samples = 0
 frames = 0
 samplesPerFrame = 2
-melBins = 8
+melBins = 12
 frameRate = 24
 sampleRate = 1000 * frameRate
 sampleHop = (sampleRate/frameRate)/samplesPerFrame

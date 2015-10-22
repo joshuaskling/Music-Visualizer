@@ -8,7 +8,7 @@ import os
 
 # declare constants
 #
-audioPath = "C:\\andre.mp3"
+audioPath = "C:\\classicalTest.mp3"
 samplesPerFrame = 2
 melBins = 1
 frameRate = 24
