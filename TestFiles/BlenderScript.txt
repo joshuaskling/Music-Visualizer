@@ -2,23 +2,10 @@ import bpy, math
 from math import sin, cos, pi
 from mathutils import Vector, Quaternion
 
-# clean up the initial workspace
+# load the sound file into the program
 #
-try:
-    bpy.data.objects['Cube'].select = True
-    bpy.ops.object.delete() 
-except: 
-    pass
-
-# open and insert the song into blender
-#
-songPath = r"C:\song.mp3"
-
-area = bpy.context.area
-old_type = area.type
-area.type = 'SEQUENCE_EDITOR'
-bpy.ops.sequencer.sound_strip_add(filepath=songPath)
-area.type = old_type
+bpy.context.scene.sequence_editor_create()
+bpy.context.scene.sequence_editor.sequences.new_sound(filepath="C:\\song.mp3", name="Sound", channel=1,frame_start=0)
 
 # open and load the beat times information
 #
@@ -69,7 +56,6 @@ print("")
 # setup some basic parameters before creating/animating objects
 #
 objectName = 'CustomObject'
-
 scn = bpy.context.scene
 scn.frame_end = maxFrames
 
@@ -84,6 +70,10 @@ verts = ((varA,varA,varC), (varA,-varA,varC), (-varA,-varA,varC), (-varA,varA,va
 
 for i in range(int((melBins/2)-melBins),int(melBins/2)):
     
+    # housekeeping and setup for each object
+    #
+    currentBeat = 0
+
     # let the user know which object is being worked on
     #
     print("")
@@ -139,19 +129,24 @@ for i in range(int((melBins/2)-melBins),int(melBins/2)):
 
         # set the object location and write a keyframe (LOCATION PIPES)
         #
-        locX = 2*i
-        locY = sin((frameNumber/10)+(pi*(i/(melBins/2))))
+        locX = i
+
+        if beatFrames[currentBeat] == frameNumber:
+            currentBeat = currentBeat + 1
+            locY = sin((frameNumber/10)+(pi*(i/(melBins/2))))
+        if currentBeat == 0:
+            locY = 0
+
         locZ = 0
 
         ob.location = (locX,locY,locZ)
-        #delta_location
         ob.keyframe_insert(data_path="location", index = -1, frame=frameNumber)
 
         # set the object rotation and write a keyframe (ROTATION PIPES)
         #
-        angleX = 0
+        angleX = float(frameMelDataPerBin)*6
         angleY = 0
-        angleZ = frameNumber/3
+        angleZ = frameNumber/5
 
         angleX = (((angleX%360)-180)/180)*(pi)
         angleY = (((angleY%360)-180)/180)*(pi)
