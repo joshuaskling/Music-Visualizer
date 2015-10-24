@@ -10,16 +10,18 @@ print("")
 print("     ATTN: Blender is now working!      ")
 print("----------------------------------------")
 print("")
+print("")
 
 # load the sound file into the program
 #
-bpy.context.scene.sequence_editor_create()
 os.chdir('..\\Media\\')
 filePth = os.getcwd() + "\\" + sys.argv[4] + ".mp3"
-print(filePth)
-bpy.context.scene.sequence_editor.sequences.new_sound(filepath=filePth, name="Sound", channel=1,frame_start=0)
 os.chdir('..\\Output\\')
-print("Blender added the sound track to the scene.")
+
+print("Blender adding sound track to the scene:")
+print(filePth)
+bpy.context.scene.sequence_editor_create()
+bpy.context.scene.sequence_editor.sequences.new_sound(filepath=filePth, name="Sound", channel=1,frame_start=0)
 
 # open and load the beat times information
 #
@@ -35,7 +37,6 @@ for i in range(len(beatData)):
     tmp = beatData[i]
     beatFrames.append(int(float(tmp)))
 
-print("")
 print("")
 print("Beats Finished Importing")
 print("Beats: " + str(len(beatData)))
@@ -78,12 +79,23 @@ meshLoc = Vector().zero()
 faces = ((1,0,4), (4,2,1), (4,3,2), (4,0,3), (0,1,2,3))
 verts = ((varA,varA,varC), (varA,-varA,varC), (-varA,-varA,varC), (-varA,varA,varC), (varC,varC,varB))
 
+frameSkip = int(sys.argv[5])
+
 #sys.exit("This will stop the script!")
+print("Frames traveled per keyframe: " + str(frameSkip))
+print("")
 print("")
 print("")
 print("***** ANIMATION STARTED *****")
 print("")
 
+#
+#	ATTENTION: THIS ENDS THE SCENE SETUP AREA
+#	
+#	THE REST OF THIS FILE IS SIMPLY A RENDERING SCRIPT, AKA "CORE"
+#	AND CAN NOW BE REPLACED, MODIFIED, OR REIMPLIMENTED AT WILL
+#
+#
 
 for i in range(int((melBins/2)-melBins),int(melBins/2)):
     
@@ -116,12 +128,19 @@ for i in range(int((melBins/2)-melBins),int(melBins/2)):
     
     # script the animation for each object
     #
-    for frameNumber in range (0,maxFrames):
+    for frame in range (1,int(maxFrames/frameSkip)):
 
         # basic setup and housekeeping for frame animation
         #
+        frameNumber = frame * frameSkip
         frameMelDataPerBin = (MelData[frameNumber])[(i+int(melBins/2))]
 
+        frameIsBeat = False
+        if beatFrames[currentBeat] <= frameNumber:
+            frameIsBeat = True
+            if (currentBeat != (len(beatFrames)-1)):
+                currentBeat = currentBeat + 1
+                
         # set the object scaling and write a keyframe (SCALING PIPES)
         #
         scaleX = 1
@@ -130,16 +149,20 @@ for i in range(int((melBins/2)-melBins),int(melBins/2)):
 
         scaleZ = frameMelDataPerBin
         scaleZ = ((float(scaleZ))/20) + 0.1
-        scaleZ = scaleZ*scaleZ
+        scaleZ = scaleZ*scaleZ*scaleZ
 
         ob.scale = (scaleX, scaleY, scaleZ)
         ob.keyframe_insert(data_path="scale", index=-1, frame=frameNumber)
 
         # set the object color and write a keyframe (COLOR PIPES)
         #
-        colRed =   ( sin( pi*(i/(melBins/2))                      ) +1) /2
-        colGreen = ( cos(-pi*(i/(melBins/2))                      ) +1) /2
-        colBlue =  ( sin( (frameNumber/55) + (pi*(i/(melBins/2))) ) +1) /2
+        colRed =   (sin(   (frameNumber/155) + (pi*(i/(melBins/2)))    )+1) /2
+        colGreen = (cos(   (frameNumber/55 ) + (pi*(i/(melBins/2)))    )+1) /2
+
+        if currentBeat == 0:
+            colBlue =  0
+        else:
+            colBlue =  ( sin( beatFrames[currentBeat] ) +1) /2
 
         mat.diffuse_color = (colRed,colGreen,colBlue)
         mat.keyframe_insert(data_path="diffuse_color", frame=frameNumber, index=-1)
@@ -148,12 +171,7 @@ for i in range(int((melBins/2)-melBins),int(melBins/2)):
         #
         locX = i
 
-        if beatFrames[currentBeat] == frameNumber:
-            if (currentBeat != (len(beatFrames)-1)):
-                currentBeat = currentBeat + 1
-            locY = sin((frameNumber/10)+(pi*(i/(melBins/2))))
-        if currentBeat == 0:
-            locY = 0
+        locY = sin((frameNumber/50)+(pi*(i/(melBins/2))))
 
         locZ = 0
 
@@ -162,10 +180,10 @@ for i in range(int((melBins/2)-melBins),int(melBins/2)):
 
         # set the object rotation and write a keyframe (ROTATION PIPES)
         #
-        angleX = float(frameMelDataPerBin)*6
         angleY = 0
-        angleZ = frameNumber/5
-
+        angleZ = currentBeat * (i/(melBins/2))
+        angleX = 0
+            
         angleX = (((angleX%360)-180)/180)*(pi)
         angleY = (((angleY%360)-180)/180)*(pi)
         angleZ = (((angleZ%360)-180)/180)*(pi)
@@ -191,7 +209,11 @@ for i in range(int((melBins/2)-melBins),int(melBins/2)):
 
 print("")
 print("")
-print("***** ANIMATION FINISHED *****")
+print("    ***** ANIMATION FINISHED *****     ")
 print("")
-print("   *** BLENDER EXITING ***    ")
+print(" *** THIS IS NOW A BLENDER CONSOLE *** ")
 print("")
+print("   *** DO NOT CLOSE THIS WINDOW ***    ")
+print("")
+print("")
+print("The next line is not an error:")

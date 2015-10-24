@@ -9,6 +9,13 @@ audioPath = sys.argv[1]
 frameRate = 24
 sampleRate = 1000 * frameRate
 
+print("")
+print("")
+print("")
+print("Tempo/Beats Processing Engine")
+print("--------------")
+print("")
+
 # setup librosa functions/processing
 #
 y, sr = librosa.load(audioPath + ".mp3", sr=sampleRate)
@@ -17,15 +24,8 @@ beatArray = librosa.frames_to_time(beats, sr=sr)
 
 # print out some information about what we're working with
 #
-print("")
-print("")
-print("")
-print("Tempo/Beats Processing Engine")
-print("--------------")
-print("")
-
 print("Beats: " + str(len(beats)))
-print("Tempo: " + str(tempo))
+print("Tempo: " + str(int(tempo)))
 
 # setup, fill, and save time and frame values for beat info
 #

@@ -15,16 +15,6 @@ sampleRate = 1000 * frameRate
 sampleHop = (sampleRate/frameRate)/samplesPerFrame
 scaleFactor = 100/80
 
-# setup librosa functions/processing
-#
-y, sr = librosa.load(audioPath + ".mp3", sr=sampleRate)
-S = librosa.feature.melspectrogram(y=y, sr=sampleRate, n_mels=melBins,fmax=8000,hop_length = sampleHop)
-librosaMel = librosa.logamplitude(S,ref_power=np.max)
-
-
-
-# print out some information about what we're working with
-#
 print("")
 print("")
 print("")
@@ -32,6 +22,14 @@ print("Mel Spectrogram Processing Engine")
 print("--------------")
 print("")
 
+# setup librosa functions/processing
+#
+y, sr = librosa.load(audioPath + ".mp3", sr=sampleRate)
+S = librosa.feature.melspectrogram(y=y, sr=sampleRate, n_mels=melBins,fmax=8000,hop_length = sampleHop)
+librosaMel = librosa.logamplitude(S,ref_power=np.max)
+
+# print out some information about what we're working with
+#
 samples = len(librosaMel[0])
 print("Samples: " + str(samples))
 
