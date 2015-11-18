@@ -1,0 +1,3 @@
+[Python IIS Svc] INFO    Service triggered at: Tue Nov 17 18:20:06 2015
+[Python IIS Svc] INFO    Service triggered at: Tue Nov 17 18:22:56 2015
+[Python Win32 SVC] INFO    MMDP Service Initialized at: Tue Nov 17 23:23:34 2015
