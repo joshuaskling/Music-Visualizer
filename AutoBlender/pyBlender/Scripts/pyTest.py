@@ -18,7 +18,7 @@ def main(args):
 		format = '[Python Web Backend] %(levelname)-7.7s %(message)s'
 	)
 	
-	logging.info("MMDP Web Service - *Start* @ %s" % time.ctime())
+	logging.info("MMDP Web Service - *Started* @ %s" % time.ctime())
 	
 	printh("System Arguments:")
 	printh("---------------------------")
@@ -36,6 +36,8 @@ def main(args):
 		
 	printh("Goodbye, from PYTHON")
 	printh("**DONE**")
+
+	logging.info("MMDP Web Service - *Finished* @ %s" % time.ctime())
 
 if __name__ == '__main__':
     main(sys.argv)

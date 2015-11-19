@@ -22,7 +22,7 @@ function hardFlush(){
 	ob_flush();
 	flush();
 	ob_implicit_flush();
-	for ($i=0; $i < 4960; $i++) {
+	for ($i=0; $i < 4150; $i++) {
 		echo ' ';
 	}
 }
@@ -47,7 +47,7 @@ function runPython($cmd){
 	
 	//* TEST LIVE OUTPUT FROM PYTHON SUBPROCESS
 	printh("<br>**Starting System Call**<br>");
-	system($cmd." 2>pythonConsoleERR.txt&");
+	system($cmd." 2>consoleERR.txt&");
 	//*/
 }
 
@@ -86,25 +86,25 @@ if (!empty($_FILES["file"])){
 	else if (!$testFlag || $forceRun) {
 		echo('<h1>**PHP Starting Test**</h1>');
 		
-		//* TEST LIVE OUTPUT FROM PHP CORE
+		//* RUN LIBROSA BEAT ANALYZER
 		echo('<h1>**pyBlender: Beat Engine**</h1>');
 		$com = 'beat_frames.py andre';
 		runPython($com);
 		//*/
 		
-		//* TEST LIVE OUTPUT FROM PHP CORE
+		//* RUN LIBROSA VOLUME ANALYZER
 		echo('<h1>**pyBlender: Volume Engine**</h1>');
 		$com = 'mel_volume.py andre';
 		runPython($com);
 		//*/
 		
-		//* TEST LIVE OUTPUT FROM PHP CORE
+		//* RUN LIBROSA MEL SPECTROGRAM ANALYZER
 		echo('<h1>**pyBlender: Spectrogram Decomposition**</h1>');
 		$com = 'n_bin_mel.py andre 8';
 		runPython($com);
 		//*/
 		
-		//* TEST LIVE OUTPUT FROM PHP CORE
+		//* FUSE CORE AND RENDERING SCRIPT
 		echo('<h1>**pyBlender: Core Fusion Engine**</h1>');
 		$com = 'core_insert.py VUmeter';
 		runPython($com);
