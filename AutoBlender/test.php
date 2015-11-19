@@ -4,12 +4,17 @@ session_start();
 <!DOCTYPE html>
 <html><head><meta http-equiv="Content-Type" content="text/html" charset="windows-1256" /></head><body>
 <form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-Please choose a file: <input name="file" type="file" /><br />
-<input type="submit" value="Upload" /></form>
+Please choose a file (it doesn't do anything, don't worry): <input name="file" type="file" /><br />
+<input type="submit" value="Begin Server Test" /></form><br>
 
 <?php 
 
 // ----- HELPER FUNCTION AREA 
+
+//METHOD TO KEEP HTML CLEAN
+function printh($subject){
+	echo "\n".$subject."<br>";
+}
 
 // METHOD TO EXECUTE ALL KNOWN FLUSH METHODS AND REFILL BUFFER
 function hardFlush(){
@@ -24,24 +29,26 @@ function hardFlush(){
 
 // METHOD TO RUN A PYTHON SCRIPT
 function runPython($cmd){
+	printh("System Call:");
 	$cmd = "python -u .\pyBlender\Scripts\\".$cmd;
-	echo $cmd;
+	printh($cmd);
 	hardFlush();
 	
-	// TEST LIVE OUTPUT FROM PHP CORE
-	echo "<br>";
-	for ($i=0; $i < 5; $i++) {
-		echo 'Hi<br>';
-		sleep(1);}
+	//* TEST LIVE OUTPUT FROM PHP CORE
+	printh("");
+	printh("Live PHP Server Countdown:");
+	printh("------------------------------");
+	$testLength = 5;
+	for ($i=0; $i < $testLength; $i++) {
+		printh("Waiting ".($testLength-$i).'...');
+		sleep(1);
+		}
+	//*/
 	
-	// TEST LIVE OUTPUT FROM PYTHON SUBPROCESS
-	echo $cmd."<br>";
-	$handle = popen($cmd,"r");
-	while(!feof($handle)) {
-		$buffer = fread($handle,1024);
-		echo $buffer;
-	hardFlush();}
-	pclose($handle);
+	//* TEST LIVE OUTPUT FROM PYTHON SUBPROCESS
+	printh("<br>**Starting System Call**<br>");
+	system($cmd." 2>pythonConsoleERR.txt&");
+	//*/
 }
 
 
@@ -51,7 +58,7 @@ if (!empty($_FILES["file"])){
 		echo "Error: " . $_FILES["file"]["error"] . "<br>";
 	}
 	else{
-		echo "Stored file:".$_FILES["file"]["name"]."<br>Size:".($_FILES["file"]["size"]/1024)." kB<br/><br/>";
+		echo "Selected file: ".$_FILES["file"]["name"]."<br>Size: ".(int)($_FILES["file"]["size"]/1024)." kB<br/><br/>";
 		//move_uploaded_file($_FILES["file"]["tmp_name"],$_FILES["file"]["name"]);
 	}
 
@@ -64,33 +71,48 @@ if (!empty($_FILES["file"])){
 	hardFlush();
 	
 	// BEGIN SCRIPT EXECUTIONS
-	echo('<h1>**PHP Starting pyBlender**</h1>');
-	hardFlush();
-
-	echo('<h1>**pyBlender: Test Script**</h1>');
-	$com = 'n_bin_mel.py classical 8';
-	runPython($com);
+	$testFlag = true;
+	$forceRun = false;
 	
+	// LIVE SCRIPT TESTING AREA
+	if ($testFlag){
+		echo('<h1>**PHP Starting Test**</h1>');
+		echo('<h1>**pyBlender: Test Script**</h1>');
+		$com = 'pyTest.py'.' arg[1]'.' arg[2]'.' etc...';
+		sleep(.1);
+		runPython($com);
+	}
+	// pyBlender FUNCTION AREA
+	else if (!$testFlag || $forceRun) {
+		echo('<h1>**PHP Starting Test**</h1>');
+		
+		//* TEST LIVE OUTPUT FROM PHP CORE
+		echo('<h1>**pyBlender: Beat Engine**</h1>');
+		$com = 'beat_frames.py andre';
+		runPython($com);
+		//*/
+		
+		//* TEST LIVE OUTPUT FROM PHP CORE
+		echo('<h1>**pyBlender: Volume Engine**</h1>');
+		$com = 'mel_volume.py andre';
+		runPython($com);
+		//*/
+		
+		//* TEST LIVE OUTPUT FROM PHP CORE
+		echo('<h1>**pyBlender: Spectrogram Decomposition**</h1>');
+		$com = 'n_bin_mel.py andre 8';
+		runPython($com);
+		//*/
+		
+		//* TEST LIVE OUTPUT FROM PHP CORE
+		echo('<h1>**pyBlender: Core Fusion Engine**</h1>');
+		$com = 'core_insert.py VUmeter';
+		runPython($com);
+		//*/
+	}
 	
-	//echo('<h1>**pyBlender: Beat Engine**</h1>');
-	$com = 'beat_frames.py andre';
-	//runPython($com);
-
-	//echo('<h1>**pyBlender: Volume Engine**</h1>');
-	$com = 'mel_volume.py andre';
-	//runPython($com);
-
-	//echo('<h1>**pyBlender: Spectrogram Decomposition**</h1>');
-	$com = 'n_bin_mel.py andre 8 ';
-	//runPython($com);
-
-	//echo('<h1>**pyBlender: Core Fusion Engine**</h1>');
-	$com = 'core_insert.py VUmeter';
-	//runPython($com);
-
+	echo('<h1>**PHP Scripts Done**</h1><br>');
 	
-	echo('<h1>Scripts done.</h1><br>');
-
 }
 
 else if(0 /*!$_FILES["file"]["name"]*/){
