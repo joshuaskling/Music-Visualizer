@@ -8,7 +8,7 @@ import logging
 def printh(strInput):
 	print "\n" , strInput , "<br>"
 	time.sleep(.1)
-	
+
 def main(args):
 	# script setup and housekeeping
 	#
@@ -25,7 +25,7 @@ def main(args):
 	printh(args)
 	printh("")
 	
-	printh("Live Output Test Loop:")
+	printh("Python - Live Output Test:")
 	printh("---------------------------")
 	
 	for x in range(5):
@@ -36,7 +36,6 @@ def main(args):
 		
 	printh("Goodbye, from PYTHON")
 	printh("**DONE**")
-
 	logging.info("MMDP Web Service - *Finished* @ %s" % time.ctime())
 
 if __name__ == '__main__':

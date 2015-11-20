@@ -36,7 +36,7 @@ function runPython($cmd){
 	
 	//* TEST LIVE OUTPUT FROM PHP CORE
 	printh("");
-	printh("Live PHP Server Countdown:");
+	printh("PHP - Live Output Test:");
 	printh("------------------------------");
 	$testLength = 5;
 	for ($i=0; $i < $testLength; $i++) {
@@ -76,42 +76,42 @@ if (!empty($_FILES["file"])){
 	
 	// LIVE SCRIPT TESTING AREA
 	if ($testFlag){
-		echo('<h1>**PHP Starting Test**</h1>');
-		echo('<h1>**pyBlender: Test Script**</h1>');
+		printh('<h1>**PHP - Starting System Test**</h1>');
+		printh('<h1>**Running Python Test Script**</h1>');
 		$com = 'pyTest.py'.' arg[1]'.' arg[2]'.' etc...';
 		sleep(.1);
 		runPython($com);
 	}
 	// pyBlender FUNCTION AREA
 	else if (!$testFlag || $forceRun) {
-		echo('<h1>**PHP Starting Test**</h1>');
+		printh('<h1>**PHP Starting pyBlender**</h1>');
 		
 		//* RUN LIBROSA BEAT ANALYZER
-		echo('<h1>**pyBlender: Beat Engine**</h1>');
+		printh('<h1>**pyBlender: Beat Engine**</h1>');
 		$com = 'beat_frames.py andre';
 		runPython($com);
 		//*/
 		
 		//* RUN LIBROSA VOLUME ANALYZER
-		echo('<h1>**pyBlender: Volume Engine**</h1>');
+		printh('<h1>**pyBlender: Volume Engine**</h1>');
 		$com = 'mel_volume.py andre';
 		runPython($com);
 		//*/
 		
 		//* RUN LIBROSA MEL SPECTROGRAM ANALYZER
-		echo('<h1>**pyBlender: Spectrogram Decomposition**</h1>');
+		printh('<h1>**pyBlender: Spectrogram Decomposition**</h1>');
 		$com = 'n_bin_mel.py andre 8';
 		runPython($com);
 		//*/
 		
 		//* FUSE CORE AND RENDERING SCRIPT
-		echo('<h1>**pyBlender: Core Fusion Engine**</h1>');
+		printh('<h1>**pyBlender: Core Fusion Engine**</h1>');
 		$com = 'core_insert.py VUmeter';
 		runPython($com);
 		//*/
 	}
 	
-	echo('<h1>**PHP Scripts Done**</h1><br>');
+	printh('<h1>**PHP Scripts Done**</h1><br>');
 	
 }
 

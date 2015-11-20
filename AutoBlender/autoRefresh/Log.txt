@@ -1,0 +1,17 @@
+Microsoft Windows [Version 6.3.9600]
+(c) 2013 Microsoft Corporation. All rights reserved.
+
+C:\WebsiteIIS\test\autoblender\autorefresh> *** Ready for User *** 
+
+C:\WebsiteIIS\test\autoblender\autorefresh>127 ok sounds good
+
+C:\WebsiteIIS\test\autoblender\autorefresh>Microsoft Windows [Version 6.3.9600]
+(c) 2013 Microsoft Corporation. All rights reserved.
+
+C:\WebsiteIIS\test\autoblender\autorefresh> *** Ready for User *** 
+
+C:\WebsiteIIS\test\autoblender\autorefresh>128 yea hopefully its a good day
+
+C:\WebsiteIIS\test\autoblender\autorefresh>129
+
+C:\WebsiteIIS\test\autoblender\autorefresh>
