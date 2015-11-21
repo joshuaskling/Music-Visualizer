@@ -1,4 +1,14 @@
-
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html" charset="windows-1256" /></head>
+<body>
+<form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+Please choose a file (it doesn't do anything, don't worry): 
+<input name="file" type="file" /><br />
+<input type="submit" value="Begin Server Test" />
+</form><br>
 
 <?php 
 
@@ -39,18 +49,13 @@ function runPython($cmd){
 	//*/
 	
 	//* TEST LIVE OUTPUT FROM PYTHON SUBPROCESS
-	printh("<br>**Starting System Test**<br>");
-	system("python -u .\pyBlender\Scripts\\pyTest.py 2>consoleERR.txt&");
-	//*/
-	
-	//* TEST LIVE OUTPUT FROM PYTHON SUBPROCESS
 	printh("<br>**Starting System Call**<br>");
 	system($cmd." 2>consoleERR.txt&");
 	//*/
 }
 
 
-// -----*** MAIN FUNCTION EXECUTION AREA ***----- //
+// ----- MAIN FUNCTION EXECUTION AREA
 if (!empty($_FILES["file"])){
 	if ($_FILES["file"]["error"] > 0){
 		echo "Error: " . $_FILES["file"]["error"] . "<br>";
