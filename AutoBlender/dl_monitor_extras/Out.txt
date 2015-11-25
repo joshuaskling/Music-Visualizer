@@ -1,0 +1,25 @@
+[webPy]: Python Web Service Test - *Started* @ Tue Nov 24 22:34:44 2015
+[webPy]: System Arguments:
+[webPy]: ---------------------------
+[webPy]: ['pyTest.py']
+[webPy]: 
+[webPy]: Python - Live Output Test:
+[webPy]: ---------------------------
+[webPy]: Round: 1
+[webPy]: Done In:  5
+[webPy]: 
+[webPy]: Round: 2
+[webPy]: Done In:  4
+[webPy]: 
+[webPy]: Round: 3
+[webPy]: Done In:  3
+[webPy]: 
+[webPy]: Round: 4
+[webPy]: Done In:  2
+[webPy]: 
+[webPy]: Round: 5
+[webPy]: Done In:  1
+[webPy]: 
+[webPy]: Goodbye, from PYTHON
+[webPy]: **DONE**
+[webPy]: Python Web Service Test - *Finished* @ Tue Nov 24 22:34:54 2015
