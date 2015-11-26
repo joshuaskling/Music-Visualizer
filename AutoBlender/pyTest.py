@@ -6,7 +6,7 @@ import time
 import logging
 
 def printh(strInput):
-	return strInput + "<br>"
+	return strInput
 
 def main(args):
 	# script setup and housekeeping
@@ -31,7 +31,7 @@ def main(args):
 		logging.info(printh("Round: " + str(x + 1)))
 		logging.info(printh("Done In:  " + str(5-x)))
 		logging.info(printh(""))
-		time.sleep(5)
+		time.sleep(2)
 		
 	logging.info(printh("Goodbye, from PYTHON"))
 	logging.info(printh("**DONE**"))
