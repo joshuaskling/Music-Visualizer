@@ -18,9 +18,11 @@ if(!file_exists("in_use")){
 	if ($runFlag){
 	 	if ($_FILES["file"]["error"] > 0){
 	 		echo "Error: " . $_FILES["file"]["error"] . "<br>";
+			$runFlag = false;
 	 	}
 	 	else{
 			if(!file_exists("in_use")){
+				
 				$sid = session_id();
 				$block = fopen("in_use", "c+");
 				fwrite($block, "Script is in use by SDI: ".$sid."\r\n");
@@ -28,11 +30,28 @@ if(!file_exists("in_use")){
 				
 				echo "Selected file: ".$_FILES["file"]["name"]."<br>Size: ".(int)($_FILES["file"]["size"]/1024)." kB<br>";
 				move_uploaded_file($_FILES["file"]["tmp_name"],$_FILES["file"]["name"]);
-				rename($_FILES["file"]["name"],"userFile.mp3");
-				$cmd = 'start "PHP Daemon" "C:\Program Files (x86)\PHP\v5.3\php.exe" -f mediator.php';
-				pclose(popen($cmd, 'r'));
+				
+				$file_parts = pathinfo($_FILES["file"]["name"]);
+				switch($file_parts['extension'])
+				{
+					case "mp3":
+						rename($_FILES["file"]["name"],"pyBlender\Output\userMusic.mp3");
+						$cmd = 'start "PHP Daemon" "C:\Program Files (x86)\PHP\v5.3\php.exe" -f mediator.php';
+						pclose(popen($cmd, 'r'));
+						break;
+
+					case "": // Handle file extension for files ending in '.'
+					case NULL: // Handle no file extension
+					default:
+						$runFlag = false;
+						unlink($_FILES["file"]["name"]);
+						unlink("in_use");
+						break;
+				}
+				
+				
 			}
-			else{echo('Another user is in the middle of the process... Please come back in a few minutes!');}
+			else{echo('Oops! Another user is in the middle of the process... Please come back in a few minutes!');}
 	 	}
 	}
 	echo('
@@ -44,6 +63,7 @@ if(!file_exists("in_use")){
 	</script>
 	
 	<h1>Python Web Portal - *Process is ');
+	
 	if($runFlag){
 		echo('ACTIVE*</h1>
 		<iframe id="dynamic-content" 
@@ -53,7 +73,7 @@ if(!file_exists("in_use")){
 			scrolling="yes">
 		</iframe>
 		<br>
-		<a href="Out.txt" download="pyBlenderScene.scn">DOWNLOAD YOUR FILES</a>
+		<a href="pyBlender/Output/Final.blend" download="pyBlend.blend">DOWNLOAD YOUR FILES</a>
 		<br>
 		when finished and then
 		<br>
