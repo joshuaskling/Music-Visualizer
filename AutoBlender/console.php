@@ -13,6 +13,7 @@ Please choose an MP3 file: <input name="file" type="file" /><br />
 if(!file_exists("in_use")){
 	
 	unlink("Out.txt");
+	unlink("terminate");
 	
 	$runFlag = !empty($_FILES["file"]);
 	if ($runFlag){
@@ -86,7 +87,7 @@ if(!file_exists("in_use")){
 		');
 	}
 	else{
-		echo('SUSPENDED*</h1><br>
+		echo('WAITING*</h1><br>
 		Please initiate the process, using the menu above.');
 	}
 	

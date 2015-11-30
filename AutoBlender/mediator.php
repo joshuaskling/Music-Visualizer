@@ -7,7 +7,7 @@ $descriptorspec = array(
 );
 
 //* PYTHON FUNCTION
-$process = proc_open("python .\pyBlender\Scripts\autoBlender.py 8", $descriptorspec, $pipes);
+$process = proc_open("python .\pyBlender\Scripts\autoBlender.py 10", $descriptorspec, $pipes);
 $status = proc_get_status($process);
 while($status['running']==true){
 	sleep(1);

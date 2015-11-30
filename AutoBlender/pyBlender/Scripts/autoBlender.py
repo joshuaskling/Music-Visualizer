@@ -65,7 +65,6 @@ def mel_volume(audioPath):
 
 	# setup librosa functions/processing
 	#
-	y, sr = librosa.load(audioPath, sr=sampleRate)
 	S = librosa.feature.melspectrogram(y=y, sr=sampleRate, n_mels=melBins,fmax=8000,hop_length = sampleHop)
 	librosaMel = librosa.logamplitude(S,ref_power=np.max)
 
@@ -130,9 +129,8 @@ def n_bin_mel(audioPath, bins):
 	sout("--------------")
 	# setup librosa functions/processing
 	#
-	y, sr = librosa.load(audioPath, sr=sampleRate)
-	S = librosa.feature.melspectrogram(y=y, sr=sampleRate, n_mels=bins, fmax=8000,hop_length = sampleHop)
-	librosaMel = librosa.logamplitude(S,ref_power=np.max)
+	M  = librosa.feature.melspectrogram(y=y, sr=sampleRate, n_mels=bins, fmax=8000,hop_length = sampleHop)
+	librosaMel = librosa.logamplitude(M,ref_power=np.max)
 
 	# sout out some information about what we're working with
 	#
