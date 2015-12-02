@@ -6,8 +6,11 @@ $descriptorspec = array(
    2 => array("file", "Err.txt", "a") // stderr
 );
 
+$core = $argv[1];
+$mels = $argv[2];
+
 //* PYTHON FUNCTION
-$process = proc_open("python .\pyBlender\Scripts\autoBlender.py 10", $descriptorspec, $pipes);
+$process = proc_open("python .\pyBlender\Scripts\autoBlender.py ". $core . " " . $mels, $descriptorspec, $pipes);
 $status = proc_get_status($process);
 while($status['running']==true){
 	sleep(1);
@@ -48,6 +51,7 @@ while(true){
 		fwrite($file, "Script terminated.");
 		fclose($file);
 		sleep(5);
+		system('taskkill /f /im blender.exe');
 		system('taskkill /f /im php.exe');
 	}
 }

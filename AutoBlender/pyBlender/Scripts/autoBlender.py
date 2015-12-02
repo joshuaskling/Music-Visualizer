@@ -229,8 +229,8 @@ def main(args):
 	sout("CWD: " + os.getcwd())
 	sout("")
 	audioPath = (".\pyBlender\Output\userMusic.mp3")
-	melBins = args[1]
-	core = "VUmeter"
+	core = args[1]
+	melBins = args[2]
 	processMusic(audioPath, melBins, core)
 	sout("")
 	sout("")

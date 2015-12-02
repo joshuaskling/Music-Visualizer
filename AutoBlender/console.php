@@ -4,7 +4,17 @@
 <meta http-equiv="Content-Type" content="text/html" charset="windows-1256" /></head>
 
 <form enctype="multipart/form-data" action='<?php echo $_SERVER["PHP_SELF"]; ?>' method="POST">
-Please choose an MP3 file: <input name="file" type="file" /><br />
+Please choose an MP3 file: <input name="file" type="file" /><br>
+Please choose a rendering core: <select name="core">
+											<option value='VUmeter'>Normal VU</option>
+											<option value='VUXmeter'>Normal VUX</option>
+											<option value='VUYmeter'>Normal VUY</option>
+								</select><br>
+Please choose a spectrogram level: 	<select name="mels">
+											<option value=5>5</option>
+											<option value=6>6</option>
+											<option value=7>7</option>
+									</select><br>
 <input type="submit" value="Begin Processing" /></form><br>
 	
 <script type="text/javascript" src="main.js"></script>
@@ -24,6 +34,9 @@ if(!file_exists("in_use")){
 	 	else{
 			if(!file_exists("in_use")){
 				
+				$core = $_POST['core'];
+				$mels = $_POST['mels'];
+				
 				$sid = session_id();
 				$block = fopen("in_use", "c+");
 				fwrite($block, "Script is in use by SDI: ".$sid."\r\n");
@@ -32,12 +45,15 @@ if(!file_exists("in_use")){
 				echo "Selected file: ".$_FILES["file"]["name"]."<br>Size: ".(int)($_FILES["file"]["size"]/1024)." kB<br>";
 				move_uploaded_file($_FILES["file"]["tmp_name"],$_FILES["file"]["name"]);
 				
+				echo "Selected core: " . $core . "<br>";
+				echo "Selected levels: " . $mels . "<br>";
+				
 				$file_parts = pathinfo($_FILES["file"]["name"]);
 				switch($file_parts['extension'])
 				{
 					case "mp3":
 						rename($_FILES["file"]["name"],"pyBlender\Output\userMusic.mp3");
-						$cmd = 'start "PHP Daemon" "C:\Program Files (x86)\PHP\v5.3\php.exe" -f mediator.php';
+						$cmd = 'start "PHP Daemon" "C:\Program Files (x86)\PHP\v5.3\php.exe" -f mediator.php ' . $core . " " . $mels;
 						pclose(popen($cmd, 'r'));
 						break;
 
