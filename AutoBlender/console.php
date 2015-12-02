@@ -74,15 +74,7 @@ if(!file_exists("in_use")){
 			scrolling="yes">
 		</iframe>
 		<br>
-		<a href="pyBlender/Output/Final.blend" download="pyBlend.blend">DOWNLOAD YOUR FILES</a>
-		<br>
-		when finished and then
-		<br>
-		<div>
-		
-		<form>
-			<input type="button" name="killButton" value="Clean Up After Yourself" onclick="myTerminator();" />
-		</form>
+		<a href="pyBlender/Output/Final.blend" download="pyBlend.blend">DOWNLOAD YOUR FILES WHEN THEY ARE READY</a>
 		</body></html>
 		');
 	}
