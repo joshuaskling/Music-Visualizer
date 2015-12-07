@@ -1,4 +1,4 @@
-﻿#
+#
 # THIS IS THE BEGINNING OF THE RENDERING CORE FOR BLENDER
 #
 
@@ -8,9 +8,9 @@ for i in range(0,melBins):
 	#
 	(varA,varB,varC) = (0.0, 0.5, 1.0)
 
-	faces = ((0,1,5,4), (1,2,5), (0,4,3), (0,3,2,1), (2,3,4,5))
+	faces = ((0,1,5,4), (1,2,6,5), (2,3,7,6), (3,0,4,7), (0,3,2,1), (4,5,6,7))
 
-	verts = ((varB,varB,varC), (varB,-varB,varC), (-varB,-varB,varC), (-varB,varB,varC), (varB,varB,varA), (varB,-varB,varA))
+	verts = ((varB,varB,varC), (varB,-varB,varC), (-varB,-varB,varC), (-varB,varB,varC), (varB,varB,varA), (varB,-varB,varA), (-varB,-varB,varA), (-varB,varB,varA))
 
 	objectName = 'CustomObject'
 	currentBeat = 0
@@ -48,17 +48,17 @@ for i in range(0,melBins):
 		frameMelDataPerBin = float((MelData[frameNumber])[i])
 
 		frameIsBeat = False
-		if beatFrames[currentBeat] == frameNumber:
+		if beatFrames[currentBeat] <= frameNumber:
 			frameIsBeat = True
 			if (currentBeat != (len(beatFrames)-1)):
 				currentBeat = currentBeat + 1
+		  
 	  
 		# set the object scaling in multiples (SCALING PIPES)
 		#
-		
 		scaleX = 1
 
-		scaleY = float(volumeData[frameNumber])/10
+		scaleY = (float(volumeData[frameNumber])/10) + 0.1
 
 		scaleZ = frameMelDataPerBin
 		scaleZ = (scaleZ/20) + 0.1
@@ -67,28 +67,24 @@ for i in range(0,melBins):
 
 		# set the object color in percent (COLOR PIPES)
 		#
-		
-		colRed =   2*frameMelDataPerBin
-		colGreen = 100 - colRed
-		colBlue = 0
+		colRed =   2.8*frameMelDataPerBin
+		colGreen = (100 - colRed)
+		colBlue = (cos(beatFrames[currentBeat] * i) + 1) / 2
 
 
 		# set the object location in units (LOCATION PIPES)
 		#
-		
-		locX = i-(melBins/2)
-		locY = 0
+		locX = i
+		locY = sin( i + (frameNumber / 100) )
 		locZ = 0
 
 
 		# set the object rotation in degrees (ROTATION PIPES)
 		#
-		
-		angleX = 0
 		angleY = 0
-		angleZ = 0
+		angleZ = ((beatFrames[currentBeat]) * i)/10
+		angleX = 0
 		 
-
 
 
 		# manipulate the incoming data, perform animations, and set keyframes
