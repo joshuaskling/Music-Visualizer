@@ -7,7 +7,7 @@
 Please choose an MP3 file: <input name="file" type="file" /><br>
 Please choose a rendering core: <select name="core">
 									<?php
-										foreach(scandir('\pyBlender\Scripts\RenderingCores') as $core){
+										foreach(scandir('pyBlender\Scripts\RenderingCores') as $core){
 											$core = pathinfo($core, PATHINFO_FILENAME);
 											if (strlen($core) >= 1)
 												echo "<option value = '" . $core . "'>" . $core . "</option>";
