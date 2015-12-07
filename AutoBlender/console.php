@@ -6,9 +6,12 @@
 <form enctype="multipart/form-data" action='<?php echo $_SERVER["PHP_SELF"]; ?>' method="POST">
 Please choose an MP3 file: <input name="file" type="file" /><br>
 Please choose a rendering core: <select name="core">
-											<option value='VUmeter'>Normal VU</option>
-											<option value='VUXmeter'>Normal VUX</option>
-											<option value='VUYmeter'>Normal VUY</option>
+									<?php
+										foreach(scandir('/pyBlender/Scripts/RenderingCores') as $core){
+											$core = pathinfo($core, PATHINFO_FILENAME);
+											echo "<option value = '" . $core . "'>" . $core . "</option>";
+										}
+									?>
 								</select><br>
 Please choose a spectrogram level: 	<select name="mels">
 											<option value=5>5</option>
