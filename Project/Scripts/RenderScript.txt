@@ -14,9 +14,13 @@ print("")
 
 # load the sound file into the program
 #
+<<<<<<< HEAD:Project/Scripts/RenderScript.txt
 os.chdir('..\\Media\\')
 filePth = os.getcwd() + "\\" + sys.argv[4] + ".mp3"
 os.chdir('..\\Output\\')
+=======
+songPath = "C:/classicTest.mp3"
+>>>>>>> 31ceaf5cd5749419471ed7784204c1c05b9929be:TestFiles/BlenderScript.txt
 
 print("Blender adding sound track to the scene:")
 print(filePth)
