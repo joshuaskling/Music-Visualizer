@@ -48,7 +48,7 @@ while(true){
 		unlink("pyBlender\Output\RenderScript.txt");
 		unlink("pyBlender\Output\userMusic.mp3");
 		$file = fopen("Out.txt", "a");
-		fwrite($file, "Script terminated.");
+		fwrite($file, "Script reset for next use.");
 		fclose($file);
 		sleep(5);
 		system('taskkill /f /im blender.exe');

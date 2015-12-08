@@ -69,12 +69,12 @@ for i in range(0,melBins):
 		#
 		colRed =   2.8*frameMelDataPerBin
 		colGreen = (100 - colRed)
-		colBlue = (cos(beatFrames[currentBeat] * i) + 1) / 2
+		colBlue = ((cos(beatFrames[currentBeat] * i) + 1) / 2) * 100
 
 
 		# set the object location in units (LOCATION PIPES)
 		#
-		locX = i
+		locX = i-(melBins/2)
 		locY = sin( i + (frameNumber / 100) )
 		locZ = 0
 

@@ -6,12 +6,12 @@ for i in range(0,melBins):
 	
 	# housekeeping and setup for each object
 	#
+	faces = ((0,1,5,4), (1,2,5), (0,4,3), (0,3,2,1), (2,3,4,5))
+
+	verts = ((varB,varB,varC), (varB,-varB,varC), (-varB,-varB,varC), (-varB,varB,varC), (varB,varB,varA), (varB,-varB,varA))
 	(varA,varB,varC) = (0.0, 0.5, 1.0)
 
-	faces = ((0,1,5,4), (1,2,6,5), (2,3,7,6), (3,0,4,7), (0,3,2,1), (4,5,6,7))
-
-	verts = ((varB,varB,varC), (varB,-varB,varC), (-varB,-varB,varC), (-varB,varB,varC), (varB,varB,varA), (varB,-varB,varA), (-varB,-varB,varA), (-varB,varB,varA))
-
+	
 	objectName = 'CustomObject'
 	currentBeat = 0
 
@@ -58,7 +58,7 @@ for i in range(0,melBins):
 		#
 		scaleX = 1
 
-		scaleY = float(volumeData[frameNumber])/10
+		scaleY = (float(volumeData[frameNumber])/10) + 0.1
 
 		scaleZ = frameMelDataPerBin
 		scaleZ = (scaleZ/20) + 0.1

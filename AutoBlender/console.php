@@ -15,23 +15,11 @@ Please choose a rendering core: <select name="core">
 									?>
 								</select><br>
 Please choose a spectrogram level: 	<select name="mels">
-											<option value=4>4</option>
-											<option value=5>5</option>
-											<option value=6>6</option>
-											<option value=7>7</option>
-											<option value=8>8</option>
-											<option value=9>9</option>
-											<option value=10>10</option>
-											<option value=11>11</option>
-											<option value=12>12</option>
-											<option value=13>13</option>
-											<option value=14>14</option>
-											<option value=15>15</option>
-											<option value=16>16</option>
-											<option value=17>17</option>
-											<option value=18>18</option>
-											<option value=19>19</option>
-											<option value=20>20</option>
+										<?php
+											for($i=5;$i<=20;$i++){
+												echo "<option value=".$i.">".$i."</option>";
+											}
+										?>
 									</select><br>
 <input type="submit" value="Begin Processing" /></form><br>
 	
@@ -48,7 +36,7 @@ if(!file_exists("in_use")){
 	$runFlag = !empty($_FILES["file"]);
 	if ($runFlag){
 	 	if ($_FILES["file"]["error"] > 0){
-	 		echo "Error: " . $_FILES["file"]["error"] . "<br>";
+	 		echo "Error: No file selected!<br>";
 			$runFlag = false;
 	 	}
 	 	else{
