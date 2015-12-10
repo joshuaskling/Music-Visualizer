@@ -40,7 +40,7 @@ for i in range(0,melBins):
 	
 	# script the animation for each object
 	#
-	for frame in range (0,int(maxFrames/frameSkip)):
+	for frame in range (1,int(maxFrames/frameSkip)):
 
 		# basic setup and housekeeping for frame animation
 		#
@@ -82,7 +82,7 @@ for i in range(0,melBins):
 		# set the object rotation in degrees (ROTATION PIPES)
 		#
 		angleY = 0
-		angleZ = ((beatFrames[currentBeat]) * i)/10
+		angleZ = ((beatFrames[currentBeat]) * (i-(melBins/2)))/10
 		angleX = 0
 		 
 
