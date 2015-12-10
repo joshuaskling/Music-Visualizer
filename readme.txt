@@ -1,1 +1,1 @@
-Testing files include two test scripts to find tempo and beats for a song and the other script creates a graph with a similar method.
+This project contains the full source for both the individual pyBlender project and the web/cloud enabled autoBlender projects based on the same core file processing.
