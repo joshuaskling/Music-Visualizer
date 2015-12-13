@@ -6,8 +6,11 @@ $descriptorspec = array(
    2 => array("file", "Err.txt", "a") // stderr
 );
 
+$core = $argv[1];
+$mels = $argv[2];
+
 //* PYTHON FUNCTION
-$process = proc_open("python .\pyBlender\Scripts\autoBlender.py 8", $descriptorspec, $pipes);
+$process = proc_open("python .\pyBlender\Scripts\autoBlender.py ". $core . " " . $mels, $descriptorspec, $pipes);
 $status = proc_get_status($process);
 while($status['running']==true){
 	sleep(1);
@@ -45,9 +48,10 @@ while(true){
 		unlink("pyBlender\Output\RenderScript.txt");
 		unlink("pyBlender\Output\userMusic.mp3");
 		$file = fopen("Out.txt", "a");
-		fwrite($file, "Script terminated.");
+		fwrite($file, "Script reset for next use.");
 		fclose($file);
 		sleep(5);
+		system('taskkill /f /im blender.exe');
 		system('taskkill /f /im php.exe');
 	}
 }

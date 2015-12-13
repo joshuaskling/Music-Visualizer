@@ -1,4 +1,4 @@
-﻿#
+#
 # THIS IS THE BEGINNING OF THE RENDERING CORE FOR BLENDER
 #
 
@@ -7,34 +7,36 @@ for i in range(0,melBins):
 	# housekeeping and setup for each object
 	#
 	(varA,varB,varC) = (0.0, 0.5, 1.0)
-
-	faces = ((0,1,5,4), (1,2,6,5), (2,3,7,6), (3,0,4,7), (0,3,2,1), (4,5,6,7))
-
-	verts = ((varB,varB,varC), (varB,-varB,varC), (-varB,-varB,varC), (-varB,varB,varC), (varB,varB,varA), (varB,-varB,varA), (-varB,-varB,varA), (-varB,varB,varA))
-
+	
+	faces = ((0,1,5,4), (1,2,5), (0,4,3), (0,3,2,1), (2,3,4,5))
+	
+	verts = ((varB,varB,varC), (varB,-varB,varC), (-varB,-varB,varC), (-varB,varB,varC), (varB,varB,varA), (varB,-varB,varA))
+	
+	
+	
 	objectName = 'CustomObject'
 	currentBeat = 0
-
+	
 	# let the user know which object is being worked on
 	#
 	sout("")
 	sout("Object being animated: " + str(i+1))
-
+	
 	# setup the object mesh and material and insert into scene
 	#
 	me = bpy.data.meshes.new(objectName+'Mesh'+ str(i))
 	ob = bpy.data.objects.new(objectName + str(i), me)
-
+	
 	mat = bpy.data.materials.new("CustomColor" + str(i))
 	mat.diffuse_color = (1,1,1)
 	ob.active_material = mat
-
+	
 	scn.objects.link(ob)
 	scn.objects.active = ob
-
+	
 	ob.show_name = False
 	ob.rotation_mode = 'QUATERNION'
-
+	
 	me.from_pydata(verts, [], faces)
 	me.update()
 	
@@ -48,14 +50,14 @@ for i in range(0,melBins):
 		frameMelDataPerBin = float((MelData[frameNumber])[i])
 
 		frameIsBeat = False
-		if beatFrames[currentBeat] == frameNumber:
+		if beatFrames[currentBeat] <= frameNumber:
 			frameIsBeat = True
 			if (currentBeat != (len(beatFrames)-1)):
 				currentBeat = currentBeat + 1
+		  
 	  
 		# set the object scaling in multiples (SCALING PIPES)
 		#
-		
 		scaleX = 1
 
 		scaleY = (float(volumeData[frameNumber])/10) + 0.1
@@ -67,28 +69,24 @@ for i in range(0,melBins):
 
 		# set the object color in percent (COLOR PIPES)
 		#
-		
 		colRed =   2.8*frameMelDataPerBin
-		colGreen = 100 - colRed
-		colBlue = 0
+		colGreen = (100 - colRed)
+		colBlue = (cos(beatFrames[currentBeat] * i) + 1) / 2
 
 
 		# set the object location in units (LOCATION PIPES)
 		#
-		
 		locX = i-(melBins/2)
-		locY = 0
+		locY = sin( i + (frameNumber / 100) )
 		locZ = 0
 
 
 		# set the object rotation in degrees (ROTATION PIPES)
 		#
-		
-		angleX = 0
 		angleY = 0
-		angleZ = 0
+		angleZ = ((beatFrames[currentBeat]) * (i-(melBins/2)))/10
+		angleX = 0
 		 
-
 
 
 		# manipulate the incoming data, perform animations, and set keyframes

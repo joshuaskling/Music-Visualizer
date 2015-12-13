@@ -5,12 +5,25 @@ import os, sys
 import time
 import logging
 
-def beat_frames(audioPath):
-	# script setup and housekeeping
+def processMusic(audioPath, melBins, core):
+
+	# script setup and housekeeping for BEATS PROCESSING
 	#
+	melBins = int(melBins)
 	frameRate = 24
 	sampleRate = 1000 * frameRate
-
+	sout("")
+	sout("")
+	sout("Loading song into pyBlender.....")
+	
+	# load music into librosa
+	#
+	y, sr = librosa.load(audioPath, sr=sampleRate)
+	sout("")
+	sout("**Loading Finished**")
+	sout("")
+	time.sleep(1)
+	
 	sout("")
 	sout("")
 	sout("Tempo/Beats Processing Engine")
@@ -19,7 +32,6 @@ def beat_frames(audioPath):
 
 	# setup librosa functions/processing
 	#
-	y, sr = librosa.load(audioPath, sr=sampleRate)
 	tempo, beats = librosa.beat.beat_track(y=y, sr=sampleRate)
 	beatArray = librosa.frames_to_time(beats, sr=sr)
 
@@ -47,11 +59,9 @@ def beat_frames(audioPath):
 	sout("")
 	time.sleep(2)
 
-def mel_volume(audioPath):
-	# script setup and housekeeping
+	# script setup and housekeeping for VOLUME PROCESSING
 	#
 	samplesPerFrame = 2
-	melBins = 1
 	frameRate = 24
 	sampleRate = 1000 * frameRate
 	sampleHop = (sampleRate/frameRate)/samplesPerFrame
@@ -65,8 +75,7 @@ def mel_volume(audioPath):
 
 	# setup librosa functions/processing
 	#
-	y, sr = librosa.load(audioPath, sr=sampleRate)
-	S = librosa.feature.melspectrogram(y=y, sr=sampleRate, n_mels=melBins,fmax=8000,hop_length = sampleHop)
+	S = librosa.feature.melspectrogram(y=y, sr=sampleRate, n_mels=1,fmax=8000,hop_length = sampleHop)
 	librosaMel = librosa.logamplitude(S,ref_power=np.max)
 
 	# sout out some information about what we're working with
@@ -85,7 +94,7 @@ def mel_volume(audioPath):
 	timeArray = []
 	for q in range(samples):
 		tmpArry = []
-		for r in range(melBins):
+		for r in range(1):
 			tmpValue = ((librosaMel[r])[q])+80
 			tmpArry.append(int(tmpValue*scaleFactor))
 		timeArray.append(tmpArry)
@@ -95,7 +104,7 @@ def mel_volume(audioPath):
 	frameArray = []
 	for q in range(frames):
 		tmpArry = []
-		for r in range(melBins):
+		for r in range(1):
 			tempValue = 0
 			for s in range(samplesPerFrame):
 				tmpValue = tempValue + ((timeArray[(2*q)+s])[r])
@@ -112,10 +121,7 @@ def mel_volume(audioPath):
 	sout("")
 	time.sleep(2)
 	
-	
-def n_bin_mel(audioPath, bins):
-	bins = int(bins)
-	# script setup and housekeeping
+	# script setup and housekeeping for MEL BINS PROCESSING
 	#
 	samples = 0
 	frames = 0
@@ -128,11 +134,11 @@ def n_bin_mel(audioPath, bins):
 	sout("")
 	sout("Mel Spectrogram Processing Engine")
 	sout("--------------")
+	
 	# setup librosa functions/processing
 	#
-	y, sr = librosa.load(audioPath, sr=sampleRate)
-	S = librosa.feature.melspectrogram(y=y, sr=sampleRate, n_mels=bins, fmax=8000,hop_length = sampleHop)
-	librosaMel = librosa.logamplitude(S,ref_power=np.max)
+	Q = librosa.feature.melspectrogram(y=y, sr=sampleRate, n_mels=melBins,fmax=8000,hop_length = sampleHop)
+	librosaMel = librosa.logamplitude(Q,ref_power=np.max)
 
 	# sout out some information about what we're working with
 	#
@@ -142,13 +148,13 @@ def n_bin_mel(audioPath, bins):
 	sout("Anim. Frames: " + str(frames))
 	sout("Samples/Frame: " + str(samplesPerFrame))
 	sout("Seconds: " + str(frames/frameRate))
-	sout("Mel Bins: " + str(bins))
+	sout("Mel Bins: " + str(melBins))
 	# convert the bin based Mel spectrogram array to a time based array
 	#	
 	timeArray = []
 	for q in range(samples):
 		tmpArry = []
-		for r in range(bins):
+		for r in range(melBins):
 			tmpValue = ((librosaMel[r])[q])+80
 			tmpArry.append(int(tmpValue*scaleFactor))
 		timeArray.append(tmpArry)
@@ -158,7 +164,7 @@ def n_bin_mel(audioPath, bins):
 	frameArray = []
 	for q in range(frames):
 		tmpArry = []
-		for r in range(bins):
+		for r in range(melBins):
 			tempValue = 0
 			for s in range(samplesPerFrame):
 				tmpValue = tempValue + ((timeArray[(2*q)+s])[r])
@@ -173,7 +179,8 @@ def n_bin_mel(audioPath, bins):
 	sout("")
 	time.sleep(2)
 
-def core_insert(core):
+	# setup and housekeeping for CORE PROCESSING
+	#
 	sout("")
 	sout("")
 	sout("Scene\\Render Core Fusion Engine")
@@ -222,12 +229,9 @@ def main(args):
 	sout("CWD: " + os.getcwd())
 	sout("")
 	audioPath = (".\pyBlender\Output\userMusic.mp3")
-	melBins = args[1]
-	core = "VUmeter"
-	beat_frames(audioPath)
-	mel_volume(audioPath)
-	n_bin_mel(audioPath, melBins)
-	core_insert(core)
+	core = args[1]
+	melBins = args[2]
+	processMusic(audioPath, melBins, core)
 	sout("")
 	sout("")
 	sout("")
