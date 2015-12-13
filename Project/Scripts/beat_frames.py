@@ -1,27 +1,31 @@
 import librosa
 import numpy as np
-import os
+import os, sys
 
-# function declarations
+# script setup and housekeeping
 #
-
-
-# declare constants
-#
-audio_path = "C:\\andre.mp3"
+os.chdir('..\\Media\\')
+audioPath = sys.argv[1]
 frameRate = 24
 sampleRate = 1000 * frameRate
 
+print("")
+print("")
+print("")
+print("Tempo/Beats Processing Engine")
+print("--------------")
+print("")
+
 # setup librosa functions/processing
 #
-y, sr = librosa.load(audio_path, sr=sampleRate)
+y, sr = librosa.load(audioPath + ".mp3", sr=sampleRate)
 tempo, beats = librosa.beat.beat_track(y=y, sr=sampleRate)
 beatArray = librosa.frames_to_time(beats, sr=sr)
 
 # print out some information about what we're working with
 #
-print("Tempo :")
-print(tempo)
+print("Beats: " + str(len(beats)))
+print("Tempo: " + str(int(tempo)))
 
 # setup, fill, and save time and frame values for beat info
 #
@@ -32,13 +36,14 @@ for i in beatArray:
 	i = float(i)
 	i = i / 100
 	frameArray.append(int(i*24))
-np.savetxt("C:\\beat_frames.lfa", frameArray)
+
+os.chdir('..\\Output\\')
+np.savetxt("beat_frames.lfa", frameArray)
+os.chdir('..\\')
 
 # confirm script execution
 #
-print("Frame Array Construction Finished: ")
-print(frameArray)
 print("")
-
-os.system("pause")
+print("**Frame Array Construction Finished**")
+print("")
 

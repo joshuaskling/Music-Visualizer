@@ -1,53 +1,45 @@
 import librosa
 import numpy as np
-import os
+import os, sys
 
-# function declarations
+# script setup and housekeeping
 #
-
-
-# declare constants
-#
-audioPath = "C:\\classicalTest.mp3"
-samples = 0
-frames = 0
+os.chdir('..\\Media\\')
+audioPath = sys.argv[1]
 samplesPerFrame = 2
-melBins = 12
+melBins = 1
 frameRate = 24
 sampleRate = 1000 * frameRate
 sampleHop = (sampleRate/frameRate)/samplesPerFrame
-timeArray = []
 scaleFactor = 100/80
+
+print("")
+print("")
+print("")
+print("Volume Processing Engine")
+print("--------------")
+print("")
 
 # setup librosa functions/processing
 #
-y, sr = librosa.load(audioPath, sr=sampleRate)
+y, sr = librosa.load(audioPath + ".mp3", sr=sampleRate)
 S = librosa.feature.melspectrogram(y=y, sr=sampleRate, n_mels=melBins,fmax=8000,hop_length = sampleHop)
 librosaMel = librosa.logamplitude(S,ref_power=np.max)
 
-
-
 # print out some information about what we're working with
-#
-print("Array: ")
-print(librosaMel)
+samples = len(librosaMel[0])
+print("Samples: " + str(samples))
 
-print("Samples: ")
-samples = len(librosaMel[1])
-print(samples)
-
-print("Anim. Frames: ")
 frames = samples/samplesPerFrame
-print(frames)
+print("Anim. Frames: " + str(frames))
 
-print("Samples/Frame: ")
-print(samplesPerFrame)
+print("Samples/Frame: " + str(samplesPerFrame))
 
-print("Seconds: ")
-print(frames/frameRate)
+print("Seconds: " + str(frames/frameRate))
 
 # convert the bin based Mel spectrogram array to a time based array
 #	
+timeArray = []
 for q in range(samples):
     tmpArry = []
     for r in range(melBins):
@@ -67,11 +59,13 @@ for q in range(frames):
         tmpValue = tmpValue / samplesPerFrame
         tmpArry.append(int(tmpValue))
     frameArray.append(tmpArry)
-np.savetxt("C:\\8_bin_mel.lfa", frameArray)
+
+os.chdir('..\\Output\\')
+np.savetxt("mel_volume.lfa", frameArray)
+os.chdir('..\\')
 
 # confirm script execution
 #
-print("Frame Array Construction Finished")
 print("")
-
-os.system("pause")
+print("**Frame Array Construction Finished**")
+print("")
